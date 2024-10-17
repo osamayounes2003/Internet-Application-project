@@ -7,50 +7,49 @@ import 'package:file_manager_internet_applications_project/user/UploadFile/Uploa
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'Auth/SharedPreferences/shared_preferences_service.dart';
 import 'Auth/SignUp/SignUp_Screen.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreferences.getInstance();
+
+  final SharedPreferencesService sharedPreferencesService =
+      SharedPreferencesService();
+  bool isLoggedIn = await sharedPreferencesService.getIsLoggedIn();
+  String? userRole = await sharedPreferencesService.getRole();
+
+  runApp(MyApp(isLoggedIn: isLoggedIn, userRole: userRole));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
 
-  // This widget is the root of your application.
+class MyApp extends StatelessWidget {
+  final bool isLoggedIn;
+  final String? userRole;
+
+  MyApp({super.key, required this.isLoggedIn, this.userRole});
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
         useMaterial3: true,
-
       ),
-      home: HomeUser_Screen(),
-      getPages: [
-        GetPage(name: '/login', page: () =>  LogIn_Screen()),
-        GetPage(name: '/OTP', page: () =>  OTP_Screen(nextRoute: '',)),
-        GetPage(name: '/newPassword', page: () =>  NewPassword_Screen()),
-        GetPage(name: '/upload', page: () =>  UploadFile_Screen()),
 
+      initialRoute: isLoggedIn
+          ? (userRole == 'USER' ? 'home_user' : 'home_admin')
+          : 'login',
+      getPages: [
+        GetPage(name: '/login', page: () => LogIn_Screen()),
+        GetPage(name: '/signup', page: () => SignUp_Screen()),
+        GetPage(name: '/newPassword', page: () => NewPassword_Screen()),
+        GetPage(name: '/upload', page: () => UploadFile_Screen()),
+        GetPage(name: '/home_user', page: () => HomeUser_Screen()),
+        GetPage(name: '/OTP', page: () => OTP_Screen(nextRoute: '',)),
 
       ],
     );

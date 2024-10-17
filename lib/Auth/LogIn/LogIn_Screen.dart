@@ -22,7 +22,7 @@ class LogIn_Screen extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(height: 50,),
+            SizedBox(height: 50),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: TextFormField(
@@ -47,9 +47,9 @@ class LogIn_Screen extends StatelessWidget {
                 style: const TextStyle(
                   color: Colors.black,
                 ),
+                keyboardType: TextInputType.emailAddress,
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Obx(() => TextFormField(
@@ -91,14 +91,16 @@ class LogIn_Screen extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
-                    child: Text("Don't have an account" ,style: TextStyle(
-                        color: Colors.grey
-                    ),),
+                    child: Text(
+                      "Don't have an account",
+                      style: TextStyle(color: Colors.grey),
+                    ),
                   ),
                   InkWell(
-                    child: Text(
-                        "SignUp"
-                    ),
+                    onTap: () {
+                      Get.toNamed("signup");
+                    },
+                    child: Text("SignUp", style: TextStyle(color: Colors.black,)),
                   )
                 ],
               ),
@@ -108,24 +110,29 @@ class LogIn_Screen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  ElevatedButton(
-                    onPressed: controller.validateAndSignUp, // استدعاء دالة التحقق
+                  Obx(() => ElevatedButton(
+                    onPressed: controller.isLoading.value
+                        ? null
+                        : controller.login,
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black45,
                         shape: const RoundedRectangleBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(10.0)))),
-                    child: const Text(
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(10.0)))),
+                    child: controller.isLoading.value
+                        ? CircularProgressIndicator(
+                      color: Colors.white,
+                    )
+                        : const Text(
                       "Log In",
                       style: TextStyle(color: Colors.white),
                     ),
-                  ),
+                  )),
                 ],
               ),
             ),
           ],
         ),
       ),
-    );
-  }
+    );  }
 }
