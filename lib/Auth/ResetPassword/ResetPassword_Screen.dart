@@ -1,6 +1,9 @@
 import 'package:file_manager_internet_applications_project/Auth/ResetPassword/ResetPassword_Controller.dart';
+import 'package:file_manager_internet_applications_project/CustomComponent/CustomButton.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../CustomComponent/CustomInput.dart';
 
 
 class ResetPasswordScreen extends StatelessWidget {
@@ -13,8 +16,7 @@ class ResetPasswordScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric( vertical:100,horizontal: 20),
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+              children: [
               Image.asset(
                 "assets/Resetpassword.png",
                 height: 150,
@@ -37,50 +39,20 @@ class ResetPasswordScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: TextFormField(
+                CustomTextFormField(
                   controller: controller.emailController,
-                  decoration: InputDecoration(
-                    suffixIcon: const Icon(Icons.email, color: Colors.black),
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    labelText: 'Email',
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: const BorderSide(color: Colors.grey),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                      borderSide: const BorderSide(color: Colors.grey),
-                    ),
-                    labelStyle: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                    ),
-                  ),
-                  style: const TextStyle(
-                    color: Colors.black,
-                  ),
+                  labelText: 'Email',
+                  keyboardType: TextInputType.emailAddress,
+                  suffixIcon: const Icon(Icons.email, color: Colors.black),
                 ),
-              ),
-              Padding(
+                Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        controller.sendVerificationCode();
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black45,
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(10.0)))),
-                      child: const Text(
-                        "Send Verification Code",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
+                    CustomElevatedButton(title:  "Send Verification Code", onPressed: () {
+                      controller.sendVerificationCode();
+                    },),
                   ],
                 ),
               ),

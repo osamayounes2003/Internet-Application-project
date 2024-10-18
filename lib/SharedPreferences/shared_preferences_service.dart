@@ -49,6 +49,11 @@ class SharedPreferencesService {
     prefs.setString('role', role);
   }
 
+  Future<int?> getUserId() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('id');
+  }
+
   Future<Map<String, dynamic>?> getUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 

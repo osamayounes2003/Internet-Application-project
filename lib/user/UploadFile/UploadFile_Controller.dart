@@ -1,19 +1,39 @@
 import 'package:get/get.dart';
+import 'package:file_picker/file_picker.dart';
+import 'UploadFile_Model.dart';
+import 'UploadFile_Services.dart';
 
-class FileUpload_Controller extends GetxController {
+class FileUploadController extends GetxController {
   RxString selectedFileName = ''.obs;
+  RxBool isUploading = false.obs;
+  FileUploadService fileUploadService = FileUploadService();
 
-  void selectFile(String fileName) {
-    selectedFileName.value = fileName;
+  Future<void> selectFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      selectedFileName.value = result.files.single.path ?? '';
+    } else {
+      selectedFileName.value = '';
+      Get.snackbar('Error', 'No file selected', snackPosition: SnackPosition.BOTTOM);
+    }
   }
 
-  void uploadFile() {
+  Future<void> uploadFile() async {
     if (selectedFileName.value.isEmpty) {
-      Get.snackbar("Error", "Please select a file before uploading",
-          snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar('Error', 'Please select a file before uploading', snackPosition: SnackPosition.BOTTOM);
     } else {
-      Get.snackbar("Success", "File uploaded: ${selectedFileName.value}",
-          snackPosition: SnackPosition.BOTTOM);
+      isUploading.value = true;
+      try {
+        FileModel? uploadedFile = await fileUploadService.uploadFile(selectedFileName.value);
+        if (uploadedFile != null) {
+          Get.snackbar('Success', 'File uploaded successfully: ${uploadedFile.name}', snackPosition: SnackPosition.BOTTOM);
+        }
+      } catch (e) {
+        Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
+      } finally {
+        isUploading.value = false;
+      }
     }
   }
 }

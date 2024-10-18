@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../CustomComponent/CustomGrid.dart';
+
 class HomeUser_Screen extends StatelessWidget {
   const HomeUser_Screen({super.key});
 
@@ -20,12 +22,17 @@ class HomeUser_Screen extends StatelessWidget {
                     shape: BoxShape.circle,
                     border: Border.all(
                       color: Colors.white70,
-                      width: 2.0, //
+                      width: 2.0,
                     ),
                   ),
-                  child: Icon(
-                    Icons.person,
-                    color: Colors.white70,
+                  child: InkWell(
+                    onTap: () {
+                      Get.toNamed('profile');
+                    },
+                    child: Icon(
+                      Icons.person,
+                      color: Colors.white70,
+                    ),
                   ),
                 ),
                 Padding(
@@ -41,8 +48,8 @@ class HomeUser_Screen extends StatelessWidget {
               padding: const EdgeInsets.only(top: 30.0),
               child: Image.asset(
                 "assets/file.png",
-                height: 150,
-                width: 150,
+                height: 125,
+                width: 125,
               ),
             ),
             Padding(
@@ -54,14 +61,15 @@ class HomeUser_Screen extends StatelessWidget {
             ),
             Expanded(
               child: GridView.count(
-                crossAxisCount: 2, // عدد الأعمدة في الشبكة
-                crossAxisSpacing: 10, // المسافة الأفقية بين العناصر
-                mainAxisSpacing: 10, // المسافة العمودية بين العناصر
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
                 children: [
-                  _buildGridItem(Icons.upload_file, "Upload File", "/upload"),
-                  _buildGridItem(Icons.folder_copy, "Groups", "/groups"),
-                  _buildGridItem(Icons.file_copy, "Files", "/files"),
-                  _buildGridItem(Icons.create_new_folder, "New Group", "/newGroup"),
+                  GridItem(icon: Icons.upload_file, label: "Upload File", route: "/upload"),
+                  GridItem(icon: Icons.folder_copy, label: "Groups", route: "/groups"),
+                  GridItem(icon: Icons.file_copy, label: "Files", route: "/files"),
+                  // _buildGridItem(
+                  //     Icons.create_new_folder, "New Group", "/newGroup"),
                 ],
               ),
             ),

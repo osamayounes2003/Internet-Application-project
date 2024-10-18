@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'package:file_manager_internet_applications_project/Auth/ResetPassword/NewPassword_Screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'OTP_Model.dart';
 
 class OtpController extends GetxController {
   var isLoading = false.obs;
@@ -8,10 +12,11 @@ class OtpController extends GetxController {
   List<FocusNode> focusNodes = List.generate(6, (index) => FocusNode());
 
   String nextRoute;
+  String emailAddress;
 
-  OtpController({required this.nextRoute});
+  OtpController({required this.nextRoute, required this.emailAddress});
 
-  void verifyOtp() {
+  Future<void> verifyOtp() async {
     String otp = otpControllers.map((controller) => controller.text).join();
 
     if (otp.length != 6) {
@@ -24,28 +29,57 @@ class OtpController extends GetxController {
       return;
     }
 
-    // محاكاة  الـ OTP
+    OtpModel otpModel = OtpModel(email: emailAddress, verificationCode: otp);
+
+    await _verifyOtpOnServer(otpModel);
+  }
+
+  Future<void> _verifyOtpOnServer(OtpModel otpModel) async {
     isLoading.value = true;
-    Future.delayed(Duration(seconds: 2), () {
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request('POST', Uri.parse('http://195.88.87.77:8888/api/v1/auth/verification'));
+
+    request.body = json.encode(otpModel.toJson());
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
       isLoading.value = false;
 
-      if (otp == "123456") {
+      if (response.statusCode == 200 || response.statusCode==201) {
         Get.snackbar(
           'Success',
-          'OTP Verified',
+          'OTP Verified Successfully',
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
-        Get.offAllNamed(nextRoute);
+        if(nextRoute=='/newPassword'){
+          Get.to(() => NewPassword_Screen(
+            emailAddress: emailAddress,
+          ));
+        }else{
+          Get.offAllNamed(nextRoute);
+        }
+
       } else {
         Get.snackbar(
           'Error',
-          'Invalid OTP',
+          'Failed to verify OTP: ${response.reasonPhrase}',
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
       }
-    });
+    } catch (e) {
+      print("errooooooooor: $e");
+      isLoading.value = false;
+      Get.snackbar(
+        'Error',
+        'Failed to verify OTP: $e',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
 
   @override

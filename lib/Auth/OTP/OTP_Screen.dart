@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../CustomComponent/CustomButton.dart';
+import '../../CustomComponent/customOTP.dart';
 import 'OTP_Controller.dart';
 
 class OTP_Screen extends StatefulWidget {
   final String nextRoute;
+  final String emailAddress;
 
-  OTP_Screen({required this.nextRoute});
+  OTP_Screen({required this.nextRoute, required this.emailAddress});
 
   @override
   State<OTP_Screen> createState() => _OTP_ScreenState();
@@ -14,8 +18,10 @@ class OTP_Screen extends StatefulWidget {
 class _OTP_ScreenState extends State<OTP_Screen> {
   @override
   Widget build(BuildContext context) {
-
-    final OtpController controller = Get.put(OtpController(nextRoute: widget.nextRoute));
+    final OtpController controller = Get.put(OtpController(
+      nextRoute: widget.nextRoute,
+      emailAddress: widget.emailAddress,
+    ));
 
     return Scaffold(
       body: Padding(
@@ -32,9 +38,7 @@ class _OTP_ScreenState extends State<OTP_Screen> {
               padding: const EdgeInsets.only(bottom: 30.0),
               child: Text(
                 "Verification",
-                style: TextStyle(
-                  fontSize: 30,
-                ),
+                style: TextStyle(fontSize: 30),
               ),
             ),
             Text(
@@ -46,7 +50,7 @@ class _OTP_ScreenState extends State<OTP_Screen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: List.generate(6, (index) {
-                return _buildOtpField(index, controller);
+                return buildOtpField(index, controller, context); // استخدام الدالة الجديدة
               }),
             ),
             SizedBox(height: 20),
@@ -55,18 +59,12 @@ class _OTP_ScreenState extends State<OTP_Screen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  ElevatedButton(
+                  CustomElevatedButton(
+                    title: 'Verify',
                     onPressed: () {
                       controller.verifyOtp();
                     },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black45,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(10.0)))),
-                    child: Text('Verify ',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    isLoading: controller.isLoading.value,
                   ),
                 ],
               ),
@@ -74,50 +72,11 @@ class _OTP_ScreenState extends State<OTP_Screen> {
             SizedBox(height: 20),
             Obx(() => controller.isLoading.value
                 ? CircularProgressIndicator()
-                : Container()), // Indicator for loading
+                : Container()), // Loading Indicator
           ],
         ),
       ),
     );
   }
 
-  Widget _buildOtpField(int index, OtpController controller) {
-    return SizedBox(
-      width: 40,
-      child: TextField(
-        controller: controller.otpControllers[index],
-        focusNode: controller.focusNodes[index],
-        textAlign: TextAlign.center,
-        keyboardType: TextInputType.number,
-        maxLength: 1,
-        decoration: InputDecoration(
-          counterText: '',
-          border: OutlineInputBorder(),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide(
-              color: Colors.grey,
-              width: 1.0,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide(
-              color: Colors.black,
-              width: 2.0,
-            ),
-          ),
-        ),
-        onChanged: (value) {
-          if (value.length == 1) {
-            if (index < 5) {
-              FocusScope.of(context).requestFocus(controller.focusNodes[index + 1]);
-            } else {
-              controller.focusNodes[index].unfocus();
-            }
-          }
-        },
-      ),
-    );
-  }
 }

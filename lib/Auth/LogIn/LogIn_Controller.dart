@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../SharedPreferences/shared_preferences_service.dart';
+import '../../SharedPreferences/shared_preferences_service.dart';
 import 'LogInModel.dart';
 
 class LogIn_Controller extends GetxController {

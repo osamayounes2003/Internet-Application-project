@@ -2,8 +2,12 @@ import 'package:file_manager_internet_applications_project/Auth/LogIn/LogIn_Cont
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../CustomComponent/CustomButton.dart';
+import '../../CustomComponent/CustomInput.dart';
+
 class LogIn_Screen extends StatelessWidget {
-   LogIn_Screen({super.key});
+  LogIn_Screen({super.key});
+
   final LogIn_Controller controller = Get.put(LogIn_Controller());
 
   @override
@@ -23,67 +27,25 @@ class LogIn_Screen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 50),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: TextFormField(
-                controller: controller.emailController,
-                decoration: InputDecoration(
-                  suffixIcon: const Icon(Icons.email, color: Colors.black),
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  labelText: 'Email',
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
-                  labelStyle: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                  ),
-                ),
-                style: const TextStyle(
-                  color: Colors.black,
-                ),
-                keyboardType: TextInputType.emailAddress,
-              ),
+            CustomTextFormField(
+              controller: controller.emailController,
+              labelText: 'Email',
+              keyboardType: TextInputType.emailAddress,
+              suffixIcon: const Icon(Icons.email, color: Colors.black),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Obx(() => TextFormField(
+            Obx(
+              () => CustomTextFormField(
                 controller: controller.passwordController,
-                obscureText: !controller.isPasswordVisible.value,
-                decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      controller.isPasswordVisible.value
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: Colors.black,
-                    ),
-                    onPressed: controller.togglePasswordVisibility,
-                  ),
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                  labelText: 'Password',
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
-                  labelStyle: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                  ),
-                ),
-                style: const TextStyle(
+                labelText: 'Password',
+                isObscure: !controller.isPasswordVisible.value,
+                suffixIcon: Icon(
+                  controller.isPasswordVisible.value
+                      ? Icons.visibility
+                      : Icons.visibility_off,
                   color: Colors.black,
                 ),
-              )),
+                onSuffixIconPressed: controller.togglePasswordVisibility,
+              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -100,7 +62,10 @@ class LogIn_Screen extends StatelessWidget {
                     onTap: () {
                       Get.toNamed("signup");
                     },
-                    child: Text("SignUp", style: TextStyle(color: Colors.black,)),
+                    child: Text("SignUp",
+                        style: TextStyle(
+                          color: Colors.black,
+                        )),
                   )
                 ],
               ),
@@ -110,29 +75,19 @@ class LogIn_Screen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Obx(() => ElevatedButton(
-                    onPressed: controller.isLoading.value
-                        ? null
-                        : controller.login,
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black45,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(10.0)))),
-                    child: controller.isLoading.value
-                        ? CircularProgressIndicator(
-                      color: Colors.white,
-                    )
-                        : const Text(
-                      "Log In",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )),
+                  CustomElevatedButton(
+                    title: "Log In",
+                    onPressed: controller.isLoading.value ? null : () async {
+                      await controller.login();
+                    },
+                    isLoading: controller.isLoading.value,
+                  ),
                 ],
               ),
             ),
           ],
         ),
       ),
-    );  }
+    );
+  }
 }

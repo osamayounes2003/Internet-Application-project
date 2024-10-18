@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart'as http;
 
 import '../OTP/OTP_Screen.dart';
+import 'SignUp_Model.dart';
 
 class SignUp_Controller extends GetxController {
 
@@ -11,10 +15,8 @@ class SignUp_Controller extends GetxController {
 
   var isPasswordVisible = false.obs;
 
-  // final List<String> items = ['Admin', 'User'];
-  // var selectedItem = 'User'.obs;
 
-  void validateAndSignUp() {
+  void validateAndSignUp() async{
     String emailPattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
     RegExp regExp = RegExp(emailPattern);
 
@@ -34,11 +36,45 @@ class SignUp_Controller extends GetxController {
       Get.snackbar('Error', 'Password must be at least 6 characters long',
           backgroundColor: Colors.red, colorText: Colors.white);
     }
-    // If all validations pass
     else {
-      Get.snackbar('Success', 'Sign up successful!',
-          backgroundColor: Colors.green, colorText: Colors.white);
-      Get.to(() => OTP_Screen(nextRoute: '/home')); // الانتقال إلى واجهة OTP وتحديد وجهة newPassword
+      await signUp();
+      // Get.snackbar('Success', 'Sign up successful!',
+      //     backgroundColor: Colors.green, colorText: Colors.white);
+      // Get.to(() => OTP_Screen(nextRoute: '/login',emailAddress: emailController.text,));
+    }
+  }
+
+  Future<void> signUp() async {
+    var headers = {'Content-Type': 'application/json'};
+    SignupModel signupModel = SignupModel(
+      fullname: fullNameController.text,
+      email: emailController.text,
+      password: passwordController.text,
+    );
+
+    var request = http.Request(
+      'POST',
+      Uri.parse('http://195.88.87.77:8888/api/v1/auth/register'),
+    );
+
+    request.body = json.encode(signupModel.toJson());
+    request.headers.addAll(headers);
+
+    try {
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200 || response.statusCode==201) {
+        print(await response.stream.bytesToString());
+        Get.snackbar('Success', 'Sign up successful!',
+            backgroundColor: Colors.green, colorText: Colors.white);
+        Get.to(() => OTP_Screen(nextRoute: '/login',emailAddress: emailController.text,));
+      } else {
+        Get.snackbar('Error', response.reasonPhrase ?? 'Unknown error',
+            backgroundColor: Colors.red, colorText: Colors.white);
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to sign up: $e',
+          backgroundColor: Colors.red, colorText: Colors.white);
     }
   }
 

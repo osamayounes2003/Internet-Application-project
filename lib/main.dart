@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'Auth/SharedPreferences/shared_preferences_service.dart';
+import '/SharedPreferences/shared_preferences_service.dart';
 import 'routes/app_routes.dart';
 
 void main() async {

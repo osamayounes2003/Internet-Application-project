@@ -1,10 +1,11 @@
-import 'package:file_manager_internet_applications_project/user/UploadFile/UploadFile_Controller.dart';
+import 'package:file_manager_internet_applications_project/CustomComponent/CustomButton.dart';
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
+import 'UploadFile_Controller.dart';
 
 class UploadFile_Screen extends StatelessWidget {
-  final FileUpload_Controller fileUploadController = Get.put(FileUpload_Controller());
+  final FileUploadController fileUploadController =
+      Get.put(FileUploadController());
 
   @override
   Widget build(BuildContext context) {
@@ -35,34 +36,15 @@ class UploadFile_Screen extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () async {
-                              FilePickerResult? result = await FilePicker.platform.pickFiles();
-                              if (result != null) {
-                                fileUploadController.selectFile(result.files.single.name);
-                                print('Selected File: ${result.files.single.name}'); // عرض اسم الملف المختار في Debug
-                              } else {
-                                print('No file selected');
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white24,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                              ),
-                            ),
-                            child: const Text(
-                              "Storage",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: CustomElevatedButton(
+                          title: "Select File",
+                          color: Colors.white24,
+                          onPressed: () async {
+                            await fileUploadController.selectFile();
+                          },
+                        )
+                        ),
                   ],
                 ),
               ),
@@ -92,8 +74,8 @@ class UploadFile_Screen extends StatelessWidget {
               ),
             ),
             InkWell(
-              onTap: () {
-                fileUploadController.uploadFile();
+              onTap: () async {
+                await fileUploadController.uploadFile();
               },
               child: Column(
                 children: [
@@ -106,6 +88,11 @@ class UploadFile_Screen extends StatelessWidget {
                 ],
               ),
             ),
+            Obx(() {
+              return fileUploadController.isUploading.value
+                  ? CircularProgressIndicator()
+                  : SizedBox.shrink();
+            }),
           ],
         ),
       ),
