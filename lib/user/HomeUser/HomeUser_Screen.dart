@@ -1,110 +1,162 @@
+import 'package:file_manager_internet_applications_project/color_.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../CustomComponent/CustomGrid.dart';
 
 class HomeUser_Screen extends StatelessWidget {
-  const HomeUser_Screen({super.key});
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+   HomeUser_Screen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    bool isWeb = screenWidth > 600;
+
     return Scaffold(
-      backgroundColor: Colors.white12,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 70.0, horizontal: 8),
-        child: Column(
-          children: [
-            Row(
+      key: _scaffoldKey,
+      backgroundColor: color_.background,
+      drawer: !isWeb
+          ? Drawer(
+        backgroundColor: Colors.black87,
+        child: SidebarContent(),
+      )
+          : null,
+      body: Row(
+        children: [
+          if (isWeb)
+            Container(
+              width: 250,
+              color: Colors.black87,
+              child: SidebarContent(),
+            ),
+          Expanded(
+            child: Column(
               children: [
-                Container(
-                  padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white70,
-                      width: 2.0,
-                    ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (!isWeb)
+                        IconButton(
+                          icon: Icon(Icons.menu, color: Colors.white70),
+                          onPressed: () {
+                            print("Opening drawer...");
+                            _scaffoldKey.currentState?.openDrawer();
+                          },
+                        ),
+                      Text(
+                        "File Manager",
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: isWeb ? 24 : 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.notifications, color: Colors.white70),
+                        onPressed: () {},
+                      ),
+                    ],
                   ),
-                  child: InkWell(
-                    onTap: () {
-                      Get.toNamed('profile');
-                    },
-                    child: Icon(
-                      Icons.person,
-                      color: Colors.white70,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: GridView.count(
+                      crossAxisCount: isWeb ? 4 : 2,
+                      crossAxisSpacing: 15,
+                      mainAxisSpacing: 15,
+                      children: [
+                        GridItem(icon: Icons.create_new_folder, label: "Add New Group", route: "/new_group"),
+                        GridItem(icon: Icons.folder_copy, label: "My Groups", route: "/my_groups"),
+                        GridItem(icon: Icons.folder, label: "All Groups", route: "/all_groups"),
+                        GridItem(icon: Icons.file_copy, label: "My Files", route: "/my_files"),
+                        GridItem(icon: Icons.file_present, label: "All Files", route: "/all_files"),
+                        GridItem(icon: Icons.check, label: "Check-in Files", route: "/check_in_files"),
+                      ],
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Text(
-                    "user name",
-                    style: TextStyle(color: Colors.white70, fontSize: 16),
-                  ),
-                )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 30.0),
-              child: Image.asset(
-                "assets/file.png",
-                height: 125,
-                width: 125,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: Text(
-                "File Manager",
-                style: TextStyle(color: Colors.white70, fontSize: 30),
-              ),
-            ),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                children: [
-                  GridItem(icon: Icons.upload_file, label: "Upload File", route: "/upload"),
-                  GridItem(icon: Icons.folder_copy, label: "Groups", route: "/groups"),
-                  GridItem(icon: Icons.file_copy, label: "Files", route: "/files"),
-                  // _buildGridItem(
-                  //     Icons.create_new_folder, "New Group", "/newGroup"),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+}
 
-  Widget _buildGridItem(IconData icon, String label, String route) {
-    return Card(
-      color: Colors.white24,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: InkWell(
-        onTap: () {
-          Get.toNamed(route);
-        },
-        child: Padding(
+class SidebarContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          color: Colors.black,
+          child: Row(
             children: [
-              Icon(icon, size: 50, color: Colors.white70),
-              SizedBox(height: 10),
+              Image.asset(
+                "assets/file.png",
+                height: 50,
+                width: 50,
+              ),
+              SizedBox(width: 10),
               Text(
-                label,
-                style: TextStyle(color: Colors.white70, fontSize: 16),
-                textAlign: TextAlign.center,
+                "File Manager",
+                style: TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ],
           ),
         ),
-      ),
+        Divider(),
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.all(0),
+            children: [
+              ListTile(
+                leading: Icon(Icons.create_new_folder, color: Colors.white70),
+                title: Text("Add New Group", style: TextStyle(color: Colors.white70)),
+                onTap: () => Get.toNamed("/new_group"),
+              ),
+              ListTile(
+                leading: Icon(Icons.folder_copy, color: Colors.white70),
+                title: Text("My Groups", style: TextStyle(color: Colors.white70)),
+                onTap: () => Get.toNamed("/my_groups"),
+              ),
+              ListTile(
+                leading: Icon(Icons.folder, color: Colors.white70),
+                title: Text("All Groups", style: TextStyle(color: Colors.white70)),
+                onTap: () => Get.toNamed("/all_groups"),
+              ),
+              ListTile(
+                leading: Icon(Icons.file_copy, color: Colors.white70),
+                title: Text("My Files", style: TextStyle(color: Colors.white70)),
+                onTap: () => Get.toNamed("/my_files"),
+              ),
+              ListTile(
+                leading: Icon(Icons.file_present, color: Colors.white70),
+                title: Text("All Files", style: TextStyle(color: Colors.white70)),
+                onTap: () => Get.toNamed("/all_files"),
+              ),
+              ListTile(
+                leading: Icon(Icons.check, color: Colors.white70),
+                title: Text("Check-in Files", style: TextStyle(color: Colors.white70)),
+                onTap: () => Get.toNamed("/check_in_files"),
+              ),
+            ],
+          ),
+        ),
+        Divider(color: Colors.white38, height: 1),
+        ListTile(
+          leading: Icon(Icons.person, color: Colors.white70),
+          title: Text("User Name", style: TextStyle(color: Colors.white70)),
+          onTap: () => Get.toNamed("/profile"),
+        ),
+      ],
     );
   }
 }
