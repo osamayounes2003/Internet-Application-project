@@ -2,6 +2,7 @@ import 'package:file_manager_internet_applications_project/admin/CreateGroup/Add
 import 'package:file_manager_internet_applications_project/admin/CreateGroup/CreateGroup/CreateGroup_screen.dart';
 import 'package:file_manager_internet_applications_project/admin/Groups/Groups_screen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import '../Admin/HomeAdmin/HomeAdmin_Screen.dart';
 import '../Auth/LogIN/LogIn_Screen.dart';
 import '../Auth/OTP/OTP_Screen.dart';
 import '../Auth/ResetPassword/NewPassword_Screen.dart';
@@ -18,6 +19,7 @@ class AppRoutes {
   static const String newPassword = '/newPassword';
   static const String upload = '/upload';
   static const String homeUser = '/home_user';
+  static const String homeAdmin = '/home_admin';
   static const String otp = '/OTP';
   static const String profile = '/profile';
   static const String resetPasswordScreen = '/ResetPasswordScreen';
@@ -40,6 +42,7 @@ class AppRoutes {
     GetPage(name: Group, page: () => Group_screen()),
     GetPage(name: CreateGroup, page: () => CreateGroup_screen()),
     GetPage(name: AddMembers, page: () => AddMembers_screen()),
+    GetPage(name: homeAdmin, page: () => HomeAdmin_Screen()),
 
   ];
 }

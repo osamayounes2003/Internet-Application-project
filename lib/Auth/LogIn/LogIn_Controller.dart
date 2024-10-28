@@ -26,7 +26,9 @@ class LogIn_Controller extends GetxController {
     isLoading.value = true;
     var url = Uri.parse('http://195.88.87.77:8888/api/v1/auth/login');
 
-    var headers = {'Content-Type': 'application/json'};
+    var headers = {
+      "Access-Control-Allow-Origin": "*",
+      'Content-Type': 'application/json'};
     var body = json.encode({
       "email": email,
       "password": password,

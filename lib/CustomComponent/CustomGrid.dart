@@ -29,12 +29,14 @@ class GridItem extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 50, color: Colors.white70),
+              Expanded(child: Icon(icon, size: 50, color: Colors.white70)),
               const SizedBox(height: 10),
-              Text(
-                label,
-                style: const TextStyle(color: Colors.white70, fontSize: 16),
-                textAlign: TextAlign.center,
+              Expanded(
+                child: Text(
+                  label,
+                  style: const TextStyle(color: Colors.white70, fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ],
           ),
