@@ -5,6 +5,7 @@ import 'UploadFile_Services.dart';
 
 class FileUploadController extends GetxController {
   RxString selectedFileName = ''.obs;
+  RxList<int> selectedFileBytes = RxList<int>();
   RxBool isUploading = false.obs;
   FileUploadService fileUploadService = FileUploadService();
 
@@ -12,20 +13,22 @@ class FileUploadController extends GetxController {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
     if (result != null) {
-      selectedFileName.value = result.files.single.path ?? '';
+            selectedFileBytes.value = result.files.single.bytes ?? [];
+        selectedFileName.value = result.files.single.name;
     } else {
       selectedFileName.value = '';
       Get.snackbar('Error', 'No file selected', snackPosition: SnackPosition.BOTTOM);
     }
   }
 
-  Future<void> uploadFile() async {
-    if (selectedFileName.value.isEmpty) {
+  Future<void> uploadFile(int groupId) async {
+    if (selectedFileName.value.isEmpty ||  selectedFileBytes.isEmpty) {
       Get.snackbar('Error', 'Please select a file before uploading', snackPosition: SnackPosition.BOTTOM);
     } else {
       isUploading.value = true;
       try {
-        FileModel? uploadedFile = await fileUploadService.uploadFile(selectedFileName.value);
+        FileModel? uploadedFile;
+          uploadedFile = await fileUploadService.uploadFileBytes(selectedFileBytes, selectedFileName.value, groupId);
         if (uploadedFile != null) {
           Get.snackbar('Success', 'File uploaded successfully: ${uploadedFile.name}', snackPosition: SnackPosition.BOTTOM);
         }

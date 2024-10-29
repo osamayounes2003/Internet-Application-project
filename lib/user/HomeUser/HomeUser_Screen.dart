@@ -31,7 +31,7 @@ class HomeUser_Screen extends StatelessWidget {
             crossAxisSpacing: 15,
             mainAxisSpacing: 15,
             children: [
-              GridItem(icon: Icons.create_new_folder, label: "Add New Group", route: "/new_group"),
+              GridItem(icon: Icons.create_new_folder, label: "Add New Group", route: "/CreateGroup"),
               GridItem(icon: Icons.folder_copy, label: "My Groups", route: "/my_groups"),
               GridItem(icon: Icons.folder, label: "All Groups", route: "/Groups"),
               GridItem(icon: Icons.file_copy, label: "My Files", route: "/my_files"),
