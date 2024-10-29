@@ -1,7 +1,7 @@
+import 'package:file_manager_internet_applications_project/admin/Groups/Groups_Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'Groups_widgets.dart';
-import 'groups_controller.dart';
 
 class Groups_screen extends StatelessWidget {
   const Groups_screen({Key? key}) : super(key: key);
@@ -31,7 +31,6 @@ class Groups_screen extends StatelessWidget {
     );
   }
 }
-
 
 
 

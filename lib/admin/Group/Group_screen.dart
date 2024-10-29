@@ -28,10 +28,15 @@ class _GroupScreenState extends State<Group_screen> with SingleTickerProviderSta
     super.didChangeDependencies();
 
     final Map<String, dynamic> arguments = Get.arguments;
+    print(arguments);
     group = arguments['group'];
 
-    members = group.listOfUsers.map((user) => user.fullname).toList();
-    uploadedFiles = group.listOfFiles ?? [];
+    if (group is! Groups) {
+      throw Exception('Expected a Groups object');
+    }
+
+    members = group.listOfUsers;
+    uploadedFiles = group.listOfFiles;
   }
 
   @override

@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       ),
 
       initialRoute: isLoggedIn
-          ? (userRole == 'USER' ? 'home_user' : 'home_admin')
+          ? (userRole == 'USER' ? 'CreateGroup' : 'home_user')
           : 'login',
       getPages: AppRoutes.routes,
     );
