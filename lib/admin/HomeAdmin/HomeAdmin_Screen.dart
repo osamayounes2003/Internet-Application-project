@@ -10,26 +10,26 @@ class HomeAdmin_Screen extends StatelessWidget {
     return Scaffold(
       backgroundColor: color_.background,
       body:Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 30.0),
-                child: Image.asset(
-                  "assets/file.png",
-                  height: 125,
-                  width: 125,
-                ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 30.0),
+              child: Image.asset(
+                "assets/file.png",
+                height: 125,
+                width: 125,
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Text(
-                  "File Manager",
-                  style: TextStyle(color: Colors.white70, fontSize: 30),
-                ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: Text(
+                "File Manager",
+                style: TextStyle(color: Colors.white70, fontSize: 30),
               ),
-            ],
-          ),
+            ),
+          ],
+        ),
       ),
     );
   }

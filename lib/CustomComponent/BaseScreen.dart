@@ -31,6 +31,7 @@ class BaseScreen extends StatelessWidget {
             ),
           Expanded(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Header(scaffoldKey: scaffoldKey),
                 Expanded(child: child),

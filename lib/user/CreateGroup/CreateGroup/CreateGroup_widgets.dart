@@ -8,7 +8,7 @@ class CreateGroup_widgets {
   static Widget groupIcon() {
     return Image.asset(
       "assets/GroupIcon (2).png",
-      color: color_.black,
+      color: color_.button,
       height: 220,
     );
   }
@@ -16,7 +16,7 @@ class CreateGroup_widgets {
   static Widget createGroupText() {
     return Text(
       "Create a Group",
-      style: TextStyle(color: color_.black, fontSize: 25),
+      style: TextStyle(color: color_.font, fontSize: 25),
     );
   }
 
@@ -31,7 +31,7 @@ class CreateGroup_widgets {
         decoration: InputDecoration(
           prefixIcon: Icon(
             Icons.edit,
-            color: color_.black,
+            color: color_.gray,
           ),
           hintText: "Enter group name",
         ),
@@ -42,7 +42,8 @@ class CreateGroup_widgets {
   static Widget createButton(CreateGroupController controller) {
     return ElevatedButton(
       onPressed: () async {
-        bool isCreated = await controller.createGroup(controller.groupName.value);
+        bool isCreated =
+            await controller.createGroup(controller.groupName.value);
         if (isCreated) {
           Get.snackbar('Success', 'Group created successfully');
         } else {
@@ -60,7 +61,7 @@ class CreateGroup_widgets {
         padding: EdgeInsets.only(left: 60, right: 60, bottom: 15, top: 15),
         backgroundColor: controller.groupName.value.isNotEmpty
             ? color_.black
-            : color_.gray,
+            : color_.button,
       ),
     );
   }
@@ -73,7 +74,8 @@ class CreateGroup_widgets {
           children: [
             IconButton(
               onPressed: () async {
-                final result = await FilePicker.platform.pickFiles(allowMultiple: true);
+                final result =
+                    await FilePicker.platform.pickFiles(allowMultiple: true);
                 if (result != null) {
                   final List<PlatformFile> files = result.files;
                   controller.addFiles(files);
@@ -83,17 +85,28 @@ class CreateGroup_widgets {
                 }
               },
               icon: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Icon(
-                    Icons.file_copy_outlined,
-                    size: 40,
-                    color: color_.black,
+                  IconButton(
+                    onPressed: () {
+                      Get.toNamed("/upload", arguments: {'groupId': controller.group.value.id});
+                    },
+                    icon: Row(
+                      children: [
+                        Icon(
+                          Icons.file_copy_outlined,
+                          size: 40,
+                          color: color_.gray,
+                        ),
+                        SizedBox(width: 15),
+                        Text(
+                          "Add File",
+                          style: TextStyle(fontSize: 17, color: color_.gray),
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(width: 15),
-                  Text(
-                    "Add Files",
-                    style: TextStyle(fontSize: 17),
-                  ),
+
                 ],
               ),
             ),
@@ -105,22 +118,22 @@ class CreateGroup_widgets {
           children: [
             IconButton(
               onPressed: () {
-                Get.toNamed("/AddMembers", arguments: {
-                  'groupId': controller.group.value.id
-                });
-                print("..................................${controller.group.value.id}");
+                Get.toNamed("/AddMembers",
+                    arguments: {'groupId': controller.group.value.id});
+                print(
+                    "..................................${controller.group.value.id}");
               },
               icon: Row(
                 children: [
                   Icon(
                     Icons.account_circle,
                     size: 40,
-                    color: color_.black,
+                    color: color_.gray,
                   ),
                   SizedBox(width: 15),
                   Text(
                     "Add Members",
-                    style: TextStyle(fontSize: 17),
+                    style: TextStyle(fontSize: 17, color: color_.gray),
                   ),
                 ],
               ),
