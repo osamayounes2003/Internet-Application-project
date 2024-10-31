@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import '../../../CustomComponent/BaseScreen.dart';
 import 'CreateGroup_Controller.dart';
 import 'CreateGroup_widgets.dart';
-import 'package:file_manager_internet_applications_project/color_.dart';
 
 class CreateGroup_screen extends StatelessWidget {
   const CreateGroup_screen({Key? key}) : super(key: key);
@@ -60,16 +59,8 @@ class CreateGroup_screen extends StatelessWidget {
                   Obx(() {
                     return CreateGroup_widgets.createButton(controller);
                   }),
-                  SizedBox(height: 30),
                 ],
               ),
-              SizedBox(height: 30,),
-              // Obx(() {
-              //   return controller.group.value.id != null
-              //    ? CreateGroup_widgets.additionalOptions(controller)
-              //   : Container();
-              // }
-              // ),
             ],
           ),
         ),

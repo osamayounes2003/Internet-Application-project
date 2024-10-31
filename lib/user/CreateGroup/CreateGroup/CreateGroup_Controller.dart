@@ -1,4 +1,3 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -9,22 +8,17 @@ class CreateGroupController extends GetxController {
   final SharedPreferencesService _sharedPreferencesService = SharedPreferencesService();
   final Rx<CreateGroupModel> group = CreateGroupModel().obs;
   var groupName = ''.obs;
-  var uploadedFiles = <PlatformFile>[].obs;
 
   void setGroupName(String name) {
     groupName.value = name;
   }
-
-  void addFiles(List<PlatformFile> files) {
-    uploadedFiles.addAll(files);
-  }
-
   Future<bool> createGroup(String groupName) async {
     try {
       String? token = await _sharedPreferencesService.getToken();
 
       if (token == null) {
         Get.snackbar('Error', 'User is not authenticated');
+        return false;
       }
 
       var headers = {
@@ -33,92 +27,45 @@ class CreateGroupController extends GetxController {
         'Authorization': 'Bearer $token',
       };
 
-      var body = json.encode({
-        "name": groupName,
-      });
+      var response = await http.get(
+        Uri.parse('http://195.88.87.77:8888/api/v1/folders'),
+        headers: headers,
+      );
 
+      if (response.statusCode == 200) {
+        List<dynamic> groups = json.decode(response.body);
+        bool nameExists = groups.any((group) => group['name'] == groupName);
+
+        if (nameExists) {
+          Get.snackbar('Error', 'Group name already exists. Please choose a different name.');
+          return false;
+        }
+      } else {
+        Get.snackbar('Error', 'Failed to check existing groups');
+        return false;
+      }
+
+      var body = json.encode({"name": groupName});
       var request = http.Request('POST', Uri.parse('http://195.88.87.77:8888/api/v1/folders'));
       request.body = body;
       request.headers.addAll(headers);
 
-      http.StreamedResponse response = await request.send();
+      http.StreamedResponse creationResponse = await request.send();
 
-      if (response.statusCode == 201) {
-        var responseData = await response.stream.bytesToString();
+      if (creationResponse.statusCode == 201) {
+        var responseData = await creationResponse.stream.bytesToString();
         var jsonResponse = json.decode(responseData);
         group.value = CreateGroupModel.fromJson(jsonResponse);
-
         Get.snackbar('Success', 'Group created successfully');
-
+        return true;
       } else {
-        Get.snackbar('Error', response.reasonPhrase ?? 'Unknown error');
+        Get.snackbar('Error', creationResponse.reasonPhrase ?? 'Unknown error');
+        return false;
       }
     } catch (e) {
       print(e);
       Get.snackbar('Error', 'Failed to create group: $e');
-    }
-    return true;
-  }
-
-  Future<void> uploadFilesToGroup() async {
-    try {
-      String? token = await _sharedPreferencesService.getToken();
-
-      if (token == null) {
-        Get.snackbar('Error', 'User is not authenticated');
-        return;
-      }
-
-      var headers = {
-        'Authorization': 'Bearer $token',
-      };
-
-      for (var file in uploadedFiles) {
-        var fileRequest = http.MultipartRequest('POST', Uri.parse('http://195.88.87.77:8888/api/v1/files/upload'));
-        fileRequest.headers.addAll(headers);
-
-        fileRequest.files.add(await http.MultipartFile.fromPath(
-          'file',
-          file.path!,
-          filename: file.name,
-        ));
-
-        http.StreamedResponse fileResponse = await fileRequest.send();
-        String fileResponseBody = await fileResponse.stream.bytesToString();
-
-        if (fileResponse.statusCode == 201) {
-          var jsonResponse = json.decode(fileResponseBody);
-          int fileId = jsonResponse['id'];
-
-          var request = http.Request('PUT', Uri.parse('http://195.88.87.77:8888/api/v1/folders/files'));
-          request.headers.addAll(headers);
-          request.body = json.encode({
-            "folderId": group.value.id,
-            "fileId": fileId,
-          });
-
-          http.StreamedResponse response = await request.send();
-          String responseBody = await response.stream.bytesToString();
-
-          if (response.statusCode == 201) {
-            print('File associated with group successfully: ${file.name}');
-          }if (fileResponse.statusCode == 403) {
-            print('Access forbidden. Check your permissions.');
-            Get.snackbar('Error', 'Access forbidden. Check your permissions.');
-          }
-        else {
-            print('Error associating file with group: ${file.name}, Status code: ${response.statusCode}');
-            print('Error response: $responseBody');
-          }
-        } else {
-          print('Error uploading file: ${file.name}, Status code: ${fileResponse.statusCode}');
-          print('Error response: $fileResponseBody');
-        }
-      }
-
-      Get.snackbar('Success', 'Files uploaded and associated with group successfully');
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to upload files: $e');
+      return false;
     }
   }
 }
