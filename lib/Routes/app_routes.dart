@@ -6,10 +6,13 @@ import '../Auth/ResetPassword/NewPassword_Screen.dart';
 import '../Auth/ResetPassword/ResetPassword_Screen.dart';
 import '../Auth/SignUp/SignUp_Screen.dart';
 import '../CommonInterfaces/Profile/Profile.dart';
-import '../user/CreateGroup/CreateGroup/CreateGroup_screen.dart';
-import '../user/Group/Group_screen.dart';
-import '../user/Groups/Groups_screen.dart';
+import '../user/CreateGroup/screens/CreateGroup_screen.dart';
+import '../user/Group/screens/Group_screen.dart';
+import '../user/Groups/screens/Groups_screen.dart';
 import '../user/HomeUser/HomeUser_Screen.dart';
+import '../user/InviteUserToGroup/screens/InviteUser_screen.dart';
+import '../user/JoiningRequests_FromGroups/screens/JoiningRequests_screen.dart';
+import '../user/JoiningRequests_ToMyGroups/screens/JoiningRequestUsers_screen.dart';
 import '../user/UploadFile/UploadFile_Screen.dart';
 
 class AppRoutes {
@@ -25,7 +28,9 @@ class AppRoutes {
   static const String Groups = '/Groups';
   static const String Group = '/Group';
   static const String CreateGroup = '/CreateGroup';
-
+  static const String InviteUser = '/InviteUser';
+  static const String JoiningRequests = '/JoiningRequests';
+  static const String JoiningRequests_toMyGroups = '/JoiningRequests_toMyGroups';
 
   static List<GetPage> routes = [
     GetPage(name: login, page: () => LogIn_Screen()),
@@ -40,6 +45,9 @@ class AppRoutes {
     GetPage(name: Group, page: () => Group_screen()),
     GetPage(name: CreateGroup, page: () => CreateGroup_screen()),
     GetPage(name: homeAdmin, page: () => HomeAdmin_Screen()),
+    GetPage(name: InviteUser, page: () => InviteUser_screen()),
+    GetPage(name: JoiningRequests, page: () => JoiningRequests_screen()),
+    GetPage(name: JoiningRequests_toMyGroups, page: () => JoiningRequestUsers_screen()),
 
   ];
 }

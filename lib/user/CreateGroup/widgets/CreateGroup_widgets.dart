@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:file_picker/file_picker.dart';
-import 'CreateGroup_Controller.dart';
 import 'package:file_manager_internet_applications_project/color_.dart';
+
+import '../controllers/CreateGroup_Controller.dart';
 
 class CreateGroup_widgets {
   static Widget groupIcon() {
@@ -22,7 +22,7 @@ class CreateGroup_widgets {
 
   static Widget groupNameField(CreateGroupController controller) {
     return Padding(
-      padding: const EdgeInsets.only(left: 60.0, right: 60, top: 3),
+      padding: const EdgeInsets.only(left: 60.0, right: 60,top: 3),
       child: TextField(
         onChanged: (value) {
           controller.setGroupName(value);

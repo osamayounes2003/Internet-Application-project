@@ -62,7 +62,7 @@ class LogIn_Controller extends GetxController {
         print('^^^^^^^^^^^^ Token ^^^^^^^^^^^^: ${user.token}');
 
         if (user.role == 'USER') {
-          Get.offAllNamed('home_user');
+          Get.offAllNamed('Groups');
         } else if (user.role == 'ADMIN') {
           Get.offAllNamed('home_admin');
         } else {

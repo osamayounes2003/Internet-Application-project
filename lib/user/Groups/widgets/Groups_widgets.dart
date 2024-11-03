@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../CustomComponent/CustomButton.dart';
-import '../../color_.dart';
-import '../Group/Group_screen.dart';
-import 'Groups_Controller.dart';
+import '../../../CustomComponent/CustomButton.dart';
+import '../../../color_.dart';
+import '../../Group/screens/Group_screen.dart';
+import '../controllers/Groups_Controller.dart';
 
 class Groups_widgets {
   static Widget customButton(String title, VoidCallback onPressed) {

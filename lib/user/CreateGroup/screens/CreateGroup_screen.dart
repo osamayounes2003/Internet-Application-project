@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../CustomComponent/BaseScreen.dart';
-import 'CreateGroup_Controller.dart';
-import 'CreateGroup_widgets.dart';
+import '../../../../CustomComponent/BaseScreen.dart';
+import '../controllers/CreateGroup_Controller.dart';
+import '../widgets/CreateGroup_widgets.dart';
 
 class CreateGroup_screen extends StatelessWidget {
   const CreateGroup_screen({Key? key}) : super(key: key);

@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:file_manager_internet_applications_project/SharedPreferences/shared_preferences_service.dart';
-import 'Groups_Model.dart';
+import '../models/Groups_Model.dart';
 
 class GroupsController extends GetxController {
   var groups = <Groups>[].obs;
@@ -57,7 +57,6 @@ class GroupsController extends GetxController {
     }
   }
 
-  // دالة لجلب المجلدات الخاصة بالمستخدم
   Future<void> fetchOwnGroups() async {
     isLoading(true);
     try {

@@ -1,8 +1,9 @@
+import 'package:file_manager_internet_applications_project/color_.dart';
 import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../../SharedPreferences/shared_preferences_service.dart';
-import 'CreateGroup_Model.dart';
+import '../../../../SharedPreferences/shared_preferences_service.dart';
+import '../models/CreateGroup_Model.dart';
 
 class CreateGroupController extends GetxController {
   final SharedPreferencesService _sharedPreferencesService = SharedPreferencesService();
@@ -37,11 +38,11 @@ class CreateGroupController extends GetxController {
         bool nameExists = groups.any((group) => group['name'] == groupName);
 
         if (nameExists) {
-          Get.snackbar('Error', 'Group name already exists. Please choose a different name.');
+          Get.snackbar('Error', 'Group name already exists. Please choose a different name.',colorText: color_.white);
           return false;
         }
       } else {
-        Get.snackbar('Error', 'Failed to check existing groups');
+        Get.snackbar('Error', 'Failed to check existing groups',colorText: color_.white);
         return false;
       }
 
@@ -56,15 +57,15 @@ class CreateGroupController extends GetxController {
         var responseData = await creationResponse.stream.bytesToString();
         var jsonResponse = json.decode(responseData);
         group.value = CreateGroupModel.fromJson(jsonResponse);
-        Get.snackbar('Success', 'Group created successfully');
+        Get.snackbar('Success', 'Group created successfully',colorText: color_.white);
         return true;
       } else {
-        Get.snackbar('Error', creationResponse.reasonPhrase ?? 'Unknown error');
+        Get.snackbar('Error', creationResponse.reasonPhrase ?? 'Unknown error',colorText: color_.white);
         return false;
       }
     } catch (e) {
       print(e);
-      Get.snackbar('Error', 'Failed to create group: $e');
+      Get.snackbar('Error', 'Failed to create group: $e',colorText: color_.white);
       return false;
     }
   }

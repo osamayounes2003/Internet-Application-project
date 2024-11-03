@@ -40,8 +40,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
         useMaterial3: true,
       ),
-      initialRoute: isLoggedIn
-          ? (userRole == 'USER' ? 'CreateGroup' : 'home_user')
+      initialRoute:
+
+      isLoggedIn
+          ? (userRole == 'USER' ? 'Groups' : 'home_user')
           : 'login',
       getPages: AppRoutes.routes,
     );

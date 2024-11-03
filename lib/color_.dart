@@ -8,4 +8,5 @@ class color_ {
   static const Color gray =  Colors.grey;
   static const Color button =  Colors.white24;
   static const Color font =  Colors.white70;
+  static const Color greydark =  Colors.black12;
 }
