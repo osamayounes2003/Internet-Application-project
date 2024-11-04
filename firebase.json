@@ -1,0 +1,1 @@
+{"functions":[{"source":"functions","codebase":"default","ignore":["node_modules",".git","firebase-debug.log","firebase-debug.*.log","*.local"]}],"flutter":{"platforms":{"dart":{"lib/firebase_options.dart":{"projectId":"filemanager-446f0","configurations":{"web":"1:353396631731:web:40349d4169a337e431e8c6"}}}}}}

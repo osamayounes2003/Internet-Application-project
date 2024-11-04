@@ -1,9 +1,31 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import '../../CustomComponent/BaseScreen.dart';
 import '../../CustomComponent/CustomGrid.dart';
 
-class HomeUser_Screen extends StatelessWidget {
+class HomeUser_Screen extends StatefulWidget {
   HomeUser_Screen({super.key});
+
+  @override
+  State<HomeUser_Screen> createState() => _HomeUser_ScreenState();
+}
+
+class _HomeUser_ScreenState extends State<HomeUser_Screen> {
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //
+  //   FirebaseMessaging.instance.getToken().then((String? token) {
+  //     assert(token != null);
+  //     print("Firebase Messaging Token: $token");
+  //   });
+  //
+  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //     print('Received a message: ${message.notification?.title}');
+  //   });
+  // }
+
 
   @override
   Widget build(BuildContext context) {
