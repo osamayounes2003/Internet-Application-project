@@ -1,3 +1,4 @@
+import 'package:file_manager_internet_applications_project/Routes/app_routes.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import '../../CustomComponent/BaseScreen.dart';
@@ -55,7 +56,7 @@ class _HomeUser_ScreenState extends State<HomeUser_Screen> {
             children: [
               GridItem(icon: Icons.create_new_folder, label: "Add New Group", route: "/CreateGroup"),
               GridItem(icon: Icons.folder, label: " Groups", route: "/Groups"),
-              GridItem(icon: Icons.file_copy, label: "My Files", route: "/my_files"),
+              GridItem(icon: Icons.file_copy, label: "My Files", route:AppRoutes.myBookedFiles),
               GridItem(icon: Icons.file_present, label: "All Files", route: "/all_files"),
               GridItem(icon: Icons.check, label: "Check-in Files", route: "/check_in_files"),
             ],

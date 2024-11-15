@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:open_filex/open_filex.dart';
 import '../../../CustomComponent/CustomButton.dart';
 import '../../../color_.dart';

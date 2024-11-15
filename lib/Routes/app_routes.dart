@@ -1,3 +1,5 @@
+import 'package:file_manager_internet_applications_project/user/files/booked_files_by_folder/screen/booked_files_by_folder_screen.dart';
+import 'package:file_manager_internet_applications_project/user/files/my_booked_files/screen/booked_files_screen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import '../Admin/HomeAdmin/HomeAdmin_Screen.dart';
 import '../Auth/LogIN/LogIn_Screen.dart';
@@ -31,7 +33,8 @@ class AppRoutes {
   static const String InviteUser = '/InviteUser';
   static const String JoiningRequests = '/JoiningRequests';
   static const String JoiningRequests_toMyGroups = '/JoiningRequests_toMyGroups';
-
+  static const String myBookedFiles = '/my_booked_files' ;
+  static const String bookedFilesByFolder = '/booked_files_by_folder';
   static List<GetPage> routes = [
     GetPage(name: login, page: () => LogIn_Screen()),
     GetPage(name: signup, page: () => SignUp_Screen()),
@@ -48,6 +51,9 @@ class AppRoutes {
     GetPage(name: InviteUser, page: () => InviteUser_screen()),
     GetPage(name: JoiningRequests, page: () => JoiningRequests_screen()),
     GetPage(name: JoiningRequests_toMyGroups, page: () => JoiningRequestUsers_screen()),
+    GetPage(name: myBookedFiles, page: () => MyBookedFiles()),
+    GetPage(name: bookedFilesByFolder, page: () => BookedFilesByFolderScreen()),
+
 
   ];
 }

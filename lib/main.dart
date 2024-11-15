@@ -8,18 +8,18 @@ import 'SharedPreferences/shared_preferences_service.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await SharedPreferences.getInstance();
-  final SharedPreferencesService sharedPreferencesService = SharedPreferencesService();
+  final SharedPreferencesService sharedPreferencesService =
+      SharedPreferencesService();
   bool isLoggedIn = await sharedPreferencesService.getIsLoggedIn();
   String? userRole = await sharedPreferencesService.getRole();
 
   await initializeFirebase();
   await requestNotificationPermission();
-   setupFirebaseMessaging();
+  setupFirebaseMessaging();
 
   runApp(MyApp(isLoggedIn: isLoggedIn, userRole: userRole));
 }
@@ -41,10 +41,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       initialRoute:
-
-      isLoggedIn
-          ? (userRole == 'USER' ? 'Groups' : 'home_user')
-          : 'login',
+          isLoggedIn ? (userRole == 'USER' ? 'Groups' : 'home_user') : 'login',
       getPages: AppRoutes.routes,
     );
   }
