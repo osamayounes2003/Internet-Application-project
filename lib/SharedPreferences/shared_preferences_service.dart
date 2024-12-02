@@ -53,6 +53,15 @@ class SharedPreferencesService {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getInt('id');
   }
+  Future<void> saveDeviceToken(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('deviceToken', token);
+  }
+
+  Future<String?> getDeviceToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('deviceToken');
+  }
 
   Future<Map<String, dynamic>?> getUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

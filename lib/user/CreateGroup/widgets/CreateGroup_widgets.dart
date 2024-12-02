@@ -1,69 +1,85 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:file_manager_internet_applications_project/color_.dart';
-
+import '../../../../color_.dart';
 import '../controllers/CreateGroup_Controller.dart';
 
 class CreateGroup_widgets {
-  static Widget groupIcon() {
+  static Widget groupIcon(BuildContext context, String theme) {
     return Image.asset(
       "assets/GroupIcon (2).png",
-      color: color_.gray,
+      color: AppColors.gray(context, theme),
       height: 220,
     );
   }
 
-  static Widget createGroupText() {
+  static Widget createGroupText(BuildContext context, String theme) {
     return Text(
-      "Create a Group",
-      style: TextStyle(color: color_.font, fontSize: 25),
+      "create group".tr,
+      style: TextStyle(color: AppColors.font(context, theme), fontSize: 25),
     );
   }
 
-  static Widget groupNameField(CreateGroupController controller) {
+  static Widget groupNameField(BuildContext context, CreateGroupController controller, String theme) {
     return Padding(
-      padding: const EdgeInsets.only(left: 60.0, right: 60,top: 3),
+      padding: const EdgeInsets.only(left: 60.0, right: 60, top: 3),
       child: TextField(
         onChanged: (value) {
           controller.setGroupName(value);
         },
-        style: TextStyle(color: color_.gray),
+        style: TextStyle(color: AppColors.background2(context, theme)),
         decoration: InputDecoration(
           prefixIcon: Icon(
             Icons.edit,
-            color: color_.gray,
+            color: AppColors.gray(context, theme),
           ),
-          hintText: "Enter group name",
+          hintText: "enter group name".tr,
+          hintStyle: TextStyle(color: AppColors.gray(context, theme)),
         ),
       ),
     );
   }
-  static Widget createButton(CreateGroupController controller) {
+
+  static Widget createButton(BuildContext context, CreateGroupController controller, String theme) {
     return ElevatedButton(
       onPressed: () async {
         if (controller.groupName.value.isEmpty) {
-          Get.snackbar('Error', 'Please enter a group name');
+          Get.snackbar(
+            'error'.tr,
+            'please enter a group name'.tr,
+            backgroundColor: AppColors.background(context, theme),
+            colorText: AppColors.font(context, theme),
+          );
           return;
         }
         bool isCreated = await controller.createGroup(controller.groupName.value);
         if (isCreated) {
-          Get.snackbar('Success', 'Group created successfully');
+          Get.snackbar(
+            'success'.tr,
+            'group created successfully'.tr,
+            backgroundColor: AppColors.background(context, theme),
+            colorText: AppColors.font(context, theme),
+          );
         } else {
-          Get.snackbar('Error', 'Failed to create group');
+          Get.snackbar(
+            'error'.tr,
+            'failed to create group'.tr,
+            backgroundColor: AppColors.background(context, theme),
+            colorText: AppColors.font(context, theme),
+          );
         }
       },
       child: Text(
-        "Create",
-        style: TextStyle(color: color_.white),
+        "create".tr,
+        style: TextStyle(color: AppColors.white(context, theme)),
       ),
       style: ElevatedButton.styleFrom(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10.0)),
         ),
-        padding: EdgeInsets.only(left: 60, right: 60, bottom: 15, top: 15),
+        padding: EdgeInsets.symmetric(horizontal: 60, vertical: 15),
         backgroundColor: controller.groupName.value.isNotEmpty
-            ? color_.background2
-            : color_.button,
+            ? AppColors.primary(context, theme)
+            : AppColors.button(context, theme),
       ),
     );
   }

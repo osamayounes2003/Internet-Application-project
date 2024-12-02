@@ -1,11 +1,14 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../../Notifications/FireBase_Services.dart';
 import '../../SharedPreferences/shared_preferences_service.dart';
 import 'LogInModel.dart';
 
 class LogIn_Controller extends GetxController {
+
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   var isPasswordVisible = false.obs;
@@ -26,12 +29,22 @@ class LogIn_Controller extends GetxController {
     isLoading.value = true;
     var url = Uri.parse('http://195.88.87.77:8888/api/v1/auth/login');
 
+    String? deviceToken = await _sharedPreferencesService.getDeviceToken();
+    if (deviceToken == null) {
+      await _fetchAndSaveDeviceToken();
+      deviceToken = await _sharedPreferencesService.getDeviceToken();
+    }
+
+    print('device token from log in $deviceToken');
+
     var headers = {
       "Access-Control-Allow-Origin": "*",
       'Content-Type': 'application/json'};
     var body = json.encode({
       "email": email,
       "password": password,
+      "fcmToken": deviceToken,
+
     });
 
     try {
@@ -62,7 +75,7 @@ class LogIn_Controller extends GetxController {
         print('^^^^^^^^^^^^ Token ^^^^^^^^^^^^: ${user.token}');
 
         if (user.role == 'USER') {
-          Get.offAllNamed('Groups');
+          Get.offAllNamed('home_user');
         } else if (user.role == 'ADMIN') {
           Get.offAllNamed('home_admin');
         } else {
@@ -101,4 +114,30 @@ class LogIn_Controller extends GetxController {
     }
     return true;
   }
+  Future<void> _fetchAndSaveDeviceToken({int maxRetries = 3}) async {
+    String? deviceToken = await _sharedPreferencesService.getDeviceToken();
+
+    if (deviceToken == null) {
+      for (int attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          await requestNotificationPermission();
+          deviceToken = await _sharedPreferencesService.getDeviceToken();
+
+          if (deviceToken != null) {
+            print('FCM Token fetched successfully: $deviceToken');
+            await _sharedPreferencesService.saveDeviceToken(deviceToken);
+            break;
+          }
+        } catch (e) {
+          print("Attempt $attempt failed to fetch FCM Token: $e");
+          if (attempt == maxRetries) {
+            print("Max retries reached. Could not fetch FCM Token.");
+          } else {
+            await Future.delayed(Duration(seconds: 2));
+          }
+        }
+      }
+    }
+  }
+
 }

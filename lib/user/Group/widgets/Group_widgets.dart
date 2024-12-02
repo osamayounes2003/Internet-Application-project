@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:open_filex/open_filex.dart';
 import '../../../CustomComponent/CustomButton.dart';
 import '../../../color_.dart';
@@ -35,7 +33,6 @@ class Group_widgets {
           PopupMenuButton<String>(
             icon: Icon(Icons.settings, color: color_.gray),
             onSelected: (String value) {
-              // Handle menu selection
             },
             itemBuilder: (BuildContext context) => isAdmin
                 ? <PopupMenuEntry<String>>[

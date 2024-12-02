@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../Routes/app_routes.dart';
+import '../Loclaization/handleChangeLang.dart';
+import '../Theme/ThemeController.dart';
+import '../color_.dart';
+
 class SidebarContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
+    String currentTheme = themeController.currentTheme.value;
+
     return Column(
       children: [
         Container(
           padding: const EdgeInsets.all(20.0),
-          color: Colors.black,
+          color: AppColors.background2(context, currentTheme),
           child: Row(
             children: [
               Image.asset(
@@ -17,42 +25,54 @@ class SidebarContent extends StatelessWidget {
                 width: 50,
               ),
               const SizedBox(width: 10),
-              const Text(
-                "File Manager",
+              Text(
+                "file manager".tr,
                 style: TextStyle(
-                    color: Colors.white70,
+                    color: AppColors.font(context, currentTheme),
                     fontSize: 18,
                     fontWeight: FontWeight.bold),
               ),
             ],
           ),
         ),
-        const Divider(),
+         Divider(color: AppColors.font(context, currentTheme)),
         Expanded(
           child: ListView(
             padding: const EdgeInsets.all(0),
             children: [
-              _buildListTile(Icons.home, "Home", "/home_user"),
-              _buildListTile(Icons.create_new_folder, "Add New Group", "/new_group"),
-              _buildListTile(Icons.folder_copy, "My Groups", "/my_groups"),
-              _buildListTile(Icons.folder, "All Groups", "/all_groups"),
-              _buildListTile(Icons.file_copy, "My Files", "/my_files"),
-              _buildListTile(Icons.file_present, "All Files", "/all_files"),
-              _buildListTile(Icons.check, "Check-in Files", "/check_in_files"),
+              _buildListTile(context, Icons.home, "Home".tr, "/home_user", currentTheme),
+              _buildListTile(context, Icons.create_new_folder, "Add New Group".tr, "/CreateGroup", currentTheme),
+              _buildListTile(context, Icons.folder_copy, "Groups".tr, "/Groups", currentTheme),
+              _buildListTile(context, Icons.file_present_rounded, "My Booked file".tr, AppRoutes.myBookedFiles, currentTheme),
+              _buildListTile(context, Icons.person_add, "Joining Requests to My Groups".tr, "/JoiningRequests_toMyGroups", currentTheme),
+              // _buildListTile(context, Icons.check, "Check-in Files".tr, "/check_in_files", currentTheme),
+              _buildListTile(context, Icons.add_alert_outlined, "Joining Requests".tr, "/JoiningRequests", currentTheme),
+              _buildListTile(context, Icons.translate, "change language".tr, "", currentTheme, isLanguageChange: true),
+              _buildListTile(context, Icons.dark_mode_outlined, "Light/Dark".tr, "", currentTheme, ismodeChange: true),
             ],
           ),
         ),
-        const Divider(color: Colors.white38, height: 1),
-        _buildListTile(Icons.person, "User Name", "/profile"),
+        Divider(color: AppColors.font(context, currentTheme), height: 1),
+        _buildListTile(context, Icons.person, "profile".tr, "/profile", currentTheme),
       ],
     );
   }
 
-  ListTile _buildListTile(IconData icon, String title, String route) {
+  ListTile _buildListTile(BuildContext context, IconData icon, String title, String route, String currentTheme, {bool isLanguageChange = false, bool ismodeChange = false}) {
     return ListTile(
-      leading: Icon(icon, color: Colors.white70),
-      title: Text(title, style: const TextStyle(color: Colors.white70)),
-      onTap: () => Get.toNamed(route),
+      leading: Icon(icon, color: AppColors.font(context, currentTheme)),
+      title: Text(title, style: TextStyle(color: AppColors.font(context, currentTheme))),
+      onTap: () async {
+        if (isLanguageChange) {
+          changeLanguage();
+        } else if (ismodeChange) {
+          // themeController.toggleTheme();
+          // Get.offAllNamed('/home_user', arguments: {'themeChanged': true});
+          Get.toNamed('/Change_Theme');
+        } else {
+          Get.toNamed(route);
+        }
+      },
     );
   }
 }

@@ -31,7 +31,7 @@ class DetailRow extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(
+           SizedBox(
             height: 10,
             child: Divider(
               thickness: 3,

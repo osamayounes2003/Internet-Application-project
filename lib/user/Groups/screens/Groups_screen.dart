@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../CustomComponent/BaseScreen.dart';
+import '../../../Theme/ThemeController.dart';
 import '../../../color_.dart';
 import '../controllers/Groups_Controller.dart';
 import '../widgets/Groups_widgets.dart';
@@ -11,6 +12,8 @@ class Groups_screen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final GroupsController groupsController = Get.put(GroupsController());
+    final ThemeController themeController = Get.find<ThemeController>();
+    final String currentTheme = themeController.currentTheme.value;
 
     return BaseScreen(
       child: LayoutBuilder(
@@ -23,20 +26,56 @@ class Groups_screen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // حقل البحث
+                TextField(
+                  onChanged: (query) {
+                    groupsController.searchQuery.value = query;
+                    groupsController.searchGroups();
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'search groups'.tr,
+                    prefixIcon: Icon(Icons.search, color: AppColors.gray(context, currentTheme)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(color: AppColors.gray(context, currentTheme)),
+                    ),
+                    labelStyle: TextStyle(color: AppColors.gray(context, currentTheme)),
+                  ),
+                  style: TextStyle(color: AppColors.font(context, currentTheme)),
+                ),
+                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Groups_widgets.customButton("My Groups", () {
-                      groupsController.showMyGroups();
-                    }),
+                    Groups_widgets.customButton(
+                      context,
+                      "my groups".tr,
+                          () {
+                        groupsController.currentGroupListType.value = GroupListType.myGroups;
+                        groupsController.showMyGroups();
+                      },
+                      currentTheme,
+                    ),
                     const SizedBox(width: 2),
-                    Groups_widgets.customButton("Joined Groups", () {
-                      groupsController.showJoinedGroups();
-                    }),
+                    Groups_widgets.customButton(
+                      context,
+                      "joined groups".tr,
+                          () {
+                        groupsController.currentGroupListType.value = GroupListType.joinedGroups;
+                        groupsController.showJoinedGroups();
+                      },
+                      currentTheme,
+                    ),
                     const SizedBox(width: 2),
-                    Groups_widgets.customButton("Public Groups", () {
-                      groupsController.showPublicGroups();
-                    }),
+                    Groups_widgets.customButton(
+                      context,
+                      "public groups".tr,
+                          () {
+                        groupsController.currentGroupListType.value = GroupListType.publicGroups;
+                        groupsController.showPublicGroups();
+                      },
+                      currentTheme,
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -49,10 +88,10 @@ class Groups_screen extends StatelessWidget {
                     final currentGroupList = groupsController.currentGroupList;
 
                     if (currentGroupList.isEmpty) {
-                      return const Center(
+                      return Center(
                         child: Text(
-                          'No groups available',
-                          style: TextStyle(color: color_.gray),
+                          'no groups available'.tr,
+                          style: TextStyle(color: AppColors.gray(context, currentTheme)),
                         ),
                       );
                     }
@@ -61,14 +100,13 @@ class Groups_screen extends StatelessWidget {
                       itemCount: currentGroupList.length,
                       itemBuilder: (context, index) {
                         final group = currentGroupList[index];
-                        bool isAdmin = currentGroupList.value ==
-                            groupsController.ownGroups.value;
-
+                        bool isAdmin = (currentGroupList.value == groupsController.ownGroups.value || groupsController.currentGroupListType.value == GroupListType.myGroups);
                         return Groups_widgets.groupListTile(
                           context,
                           group,
                           isAdmin,
                           groupsController,
+                          currentTheme,
                         );
                       },
                     );

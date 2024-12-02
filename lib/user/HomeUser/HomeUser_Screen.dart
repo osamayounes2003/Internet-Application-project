@@ -1,8 +1,12 @@
+import 'package:file_manager_internet_applications_project/CustomComponent/ToolTip.dart';
 import 'package:file_manager_internet_applications_project/Routes/app_routes.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import '../../CustomComponent/BaseScreen.dart';
 import '../../CustomComponent/CustomGrid.dart';
+import '../../Theme/ThemeController.dart';
 
 class HomeUser_Screen extends StatefulWidget {
   HomeUser_Screen({super.key});
@@ -13,20 +17,14 @@ class HomeUser_Screen extends StatefulWidget {
 
 class _HomeUser_ScreenState extends State<HomeUser_Screen> {
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //
-  //   FirebaseMessaging.instance.getToken().then((String? token) {
-  //     assert(token != null);
-  //     print("Firebase Messaging Token: $token");
-  //   });
-  //
-  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  //     print('Received a message: ${message.notification?.title}');
-  //   });
-  // }
-
+  @override
+  void initState() {
+    super.initState();
+    final arguments = Get.arguments as Map?;
+    if (arguments != null && arguments['themeChanged'] == true) {
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +52,21 @@ class _HomeUser_ScreenState extends State<HomeUser_Screen> {
             crossAxisSpacing: 15,
             mainAxisSpacing: 15,
             children: [
-              GridItem(icon: Icons.create_new_folder, label: "Add New Group", route: "/CreateGroup"),
-              GridItem(icon: Icons.folder, label: " Groups", route: "/Groups"),
-              GridItem(icon: Icons.file_copy, label: "My Files", route:AppRoutes.myBookedFiles),
-              GridItem(icon: Icons.file_present, label: "All Files", route: "/all_files"),
-              GridItem(icon: Icons.check, label: "Check-in Files", route: "/check_in_files"),
+              CustomTooltip(
+                  message: 'if you want to create your own group '.tr,
+                  child: GridItem(icon: Icons.create_new_folder, label: 'Add New Group'.tr, route: "/CreateGroup")),
+              CustomTooltip(
+                  message: 'see all group and your group and joined group '.tr,
+                  child: GridItem(icon: Icons.folder_copy, label: 'Groups'.tr, route: "/Groups")),
+              CustomTooltip(
+                  message: 'all files you are check in '.tr,
+                  child: GridItem(icon: Icons.file_present_rounded, label: 'My Booked Files'.tr, route: "/myBookedFiles")),
+              CustomTooltip(
+                  message: 'user who send request to join one of your groups'.tr,
+                  child: GridItem(icon: Icons.person_add, label: 'Joining Requests to My Groups'.tr, route: "/JoiningRequests_toMyGroups")),
+              CustomTooltip(
+                  message: 'user invite you to join there groups'.tr,
+                  child: GridItem(icon: Icons.add_alert_outlined, label: "Joining Requests".tr, route: "/JoiningRequests")),
             ],
           );
         },

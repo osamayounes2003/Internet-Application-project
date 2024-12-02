@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-
-import '../main.dart';
-
-// final navigatorKey = GlobalKey<NavigatorState>();
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 Future<void> _firebaseBackgroundMessage(RemoteMessage message) async {
   if (message.notification != null) {
@@ -13,18 +11,17 @@ Future<void> _firebaseBackgroundMessage(RemoteMessage message) async {
 }
 
 void showNotification({required String title, required String body}) {
-  showDialog(
-    context: navigatorKey.currentContext!,
-    builder: (context) => AlertDialog(
+  Get.dialog(
+    AlertDialog(
       title: Text(title),
       content: Text(body),
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.pop(context);
+            Get.back();
           },
           child: Text("Ok"),
-        )
+        ),
       ],
     ),
   );
@@ -34,7 +31,7 @@ void setupFirebaseMessaging() {
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     if (message.notification != null) {
       print("Background Notification Tapped");
-      navigatorKey.currentState!.pushNamed("/message", arguments: message);
+      Get.toNamed("/message", arguments: message);
     }
   });
 
@@ -44,7 +41,7 @@ void setupFirebaseMessaging() {
     String payloadData = jsonEncode(message.data);
     print("Got a message in foreground");
     if (message.notification != null) {
-
+      // Show notification using Get.dialog
       showNotification(
         title: message.notification!.title!,
         body: message.notification!.body!,
@@ -56,11 +53,3 @@ void setupFirebaseMessaging() {
 Future<RemoteMessage?> getInitialMessage() async {
   return await FirebaseMessaging.instance.getInitialMessage();
 }
-
-//
-// if (message != null) {
-// print("Launched from terminated state");
-// Future.delayed(Duration(seconds: 1), () {
-// navigatorKey.currentState!.pushNamed("/message", arguments: message);
-// });
-// }

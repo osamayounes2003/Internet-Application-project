@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../../SharedPreferences/shared_preferences_service.dart';
+import '../../Groups/controllers/Groups_Controller.dart';
 import '../models/CreateGroup_Model.dart';
 
 class CreateGroupController extends GetxController {
@@ -13,11 +14,11 @@ class CreateGroupController extends GetxController {
   void setGroupName(String name) {
     groupName.value = name;
   }
+
   Future<bool> createGroup(String groupName) async {
     try {
       String? token = await _sharedPreferencesService.getToken();
-
-      if (token == null) {
+      if (token == null || token.isEmpty) {
         Get.snackbar('Error', 'User is not authenticated');
         return false;
       }
@@ -28,44 +29,41 @@ class CreateGroupController extends GetxController {
         'Authorization': 'Bearer $token',
       };
 
-      var response = await http.get(
-        Uri.parse('http://195.88.87.77:8888/api/v1/folders'),
-        headers: headers,
-      );
-
-      if (response.statusCode == 200) {
-        List<dynamic> groups = json.decode(response.body);
-        bool nameExists = groups.any((group) => group['name'] == groupName);
-
-        if (nameExists) {
-          Get.snackbar('Error', 'Group name already exists. Please choose a different name.',colorText: color_.white);
-          return false;
-        }
-      } else {
-        Get.snackbar('Error', 'Failed to check existing groups',colorText: color_.white);
-        return false;
-      }
-
       var body = json.encode({"name": groupName});
-      var request = http.Request('POST', Uri.parse('http://195.88.87.77:8888/api/v1/folders'));
+      var request = http.Request(
+        'POST',
+        Uri.parse('http://195.88.87.77:8888/api/v1/folders'),
+      );
       request.body = body;
       request.headers.addAll(headers);
 
       http.StreamedResponse creationResponse = await request.send();
 
       if (creationResponse.statusCode == 201) {
-        var responseData = await creationResponse.stream.bytesToString();
-        var jsonResponse = json.decode(responseData);
-        group.value = CreateGroupModel.fromJson(jsonResponse);
-        Get.snackbar('Success', 'Group created successfully',colorText: color_.white);
-        return true;
+        try {
+          var responseData = await creationResponse.stream.bytesToString();
+          var jsonResponse = json.decode(responseData);
+          group.value = CreateGroupModel.fromJson(jsonResponse);
+          Get.reload<GroupsController>();
+          Get.offAllNamed('/Group');
+          Get.snackbar('Success', 'Group created successfully', colorText: color_.white);
+          return true;
+        } catch (e) {
+          Get.snackbar('Error', 'Failed to parse creation response: $e',
+              colorText: color_.white);
+          print("Parsing creation response error: $e");
+          return false;
+        }
       } else {
-        Get.snackbar('Error', creationResponse.reasonPhrase ?? 'Unknown error',colorText: color_.white);
+        var errorMessage = await creationResponse.stream.bytesToString();
+        print("Creation error: ${creationResponse.reasonPhrase}, Body: $errorMessage");
+        Get.snackbar('Error', 'Failed to create group: ${creationResponse.reasonPhrase ?? 'Unknown error'}',
+            colorText: color_.white);
         return false;
       }
     } catch (e) {
-      print(e);
-      Get.snackbar('Error', 'Failed to create group: $e',colorText: color_.white);
+      print("Unexpected error: $e");
+      Get.snackbar('Error', 'Failed to create group: $e', colorText: color_.white);
       return false;
     }
   }

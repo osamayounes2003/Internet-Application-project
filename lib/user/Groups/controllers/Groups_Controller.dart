@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:file_manager_internet_applications_project/SharedPreferences/shared_preferences_service.dart';
 import '../models/Groups_Model.dart';
+enum GroupListType { all, myGroups, joinedGroups, publicGroups }
 
 class GroupsController extends GetxController {
   var groups = <Groups>[].obs;
@@ -11,8 +12,11 @@ class GroupsController extends GetxController {
   var joinedOtherGroups = <Groups>[].obs;
   var notJoinedOtherGroups = <Groups>[].obs;
   var currentGroupList = <Groups>[].obs;
+  var searchQuery = ''.obs;
   var isLoading = true.obs;
   final SharedPreferencesService _sharedPreferencesService = SharedPreferencesService();
+  var currentGroupListType = GroupListType.all.obs;
+
 
   @override
   void onInit() {
@@ -20,6 +24,37 @@ class GroupsController extends GetxController {
     fetchOwnGroups();
     fetchOtherGroups();
     super.onInit();
+  }
+  void searchGroups() {
+    List<Groups> filteredGroups = [];
+
+    switch (currentGroupListType.value) {
+      case GroupListType.myGroups:
+        filteredGroups = ownGroups;
+        break;
+      case GroupListType.joinedGroups:
+        filteredGroups = joinedOtherGroups;
+        break;
+      case GroupListType.publicGroups:
+        filteredGroups = notJoinedOtherGroups;
+        break;
+      case GroupListType.all:
+      default:
+        filteredGroups = [...ownGroups, ...otherGroups];
+        break;
+    }
+
+    if (searchQuery.value.isEmpty) {
+      currentGroupList.value = filteredGroups;
+    } else {
+      currentGroupList.value = filteredGroups.where((group) {
+        return group.name.toLowerCase().contains(searchQuery.value.toLowerCase());
+      }).toList();
+    }
+
+    currentGroupList.value = currentGroupList.value.where((group) {
+      return !group.listOfUsers.any((user) => user.status == "ACCEPTED");
+    }).toList();
   }
 
   Future<void> fetchGroups() async {
@@ -45,7 +80,20 @@ class GroupsController extends GetxController {
 
       if (response.statusCode == 200) {
         List jsonResponse = json.decode(response.body);
-        groups.value = jsonResponse.map((group) => Groups.fromJson(group)).toList();
+        groups.value = jsonResponse.map((group) {
+          List<UserInFolder> filteredUsers = group['usersInFolder'] != null
+              ? List<UserInFolder>.from(
+            group['usersInFolder']
+                .map((user) => UserInFolder.fromJson(user))
+                .where((userInFolder) => userInFolder.status == "ACCEPTED"),
+          )
+              : [];
+
+          return Groups.fromJson({
+            ...group,
+            'usersInFolder': filteredUsers,
+          });
+        }).toList();
 
       } else {
         Get.snackbar('Error', 'Failed to load groups. Status code: ${response.statusCode}');
@@ -61,7 +109,7 @@ class GroupsController extends GetxController {
     isLoading(true);
     try {
       String? token = await _sharedPreferencesService.getToken();
-
+      print('\n$token');
       if (token == null) {
         Get.snackbar('Error', 'User is not authenticated');
         isLoading(false);
@@ -77,9 +125,18 @@ class GroupsController extends GetxController {
         headers: headers,
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print(response.statusCode);
         List jsonResponse = json.decode(response.body);
-        ownGroups.value = jsonResponse.map((group) => Groups.fromJson(group)).toList();
+
+        ownGroups.value = jsonResponse.map((groupJson) {
+          Groups group = Groups.fromJson(groupJson);
+
+          group.listOfUsers.retainWhere((userInFolder) => userInFolder.status == "ACCEPTED");
+
+          return group;
+        }).toList();
+
       } else {
         Get.snackbar('Error', 'Failed to load own groups. Status code: ${response.statusCode}');
       }
@@ -89,6 +146,7 @@ class GroupsController extends GetxController {
       isLoading(false);
     }
   }
+
 
   Future<void> fetchOtherGroups() async {
     isLoading(true);
@@ -119,15 +177,20 @@ class GroupsController extends GetxController {
         List<Groups> notJoinedGroups = [];
 
         for (var group in fetchedGroups) {
-          bool isMember = group.listOfUsers.any((userInFolder) => userInFolder.id == currentUserId);
-          if (isMember) {
+          group.listOfUsers.retainWhere((userInFolder) => userInFolder.status == "ACCEPTED");
+
+          bool isAcceptedMember = group.listOfUsers.any(
+                (userInFolder) => userInFolder.user.id == currentUserId,
+          );
+
+          if (isAcceptedMember) {
             joinedGroups.add(group);
           } else {
             notJoinedGroups.add(group);
           }
         }
 
-        otherGroups.value = fetchedGroups;
+        otherGroups.value = joinedGroups + notJoinedGroups;
         joinedOtherGroups.value = joinedGroups;
         notJoinedOtherGroups.value = notJoinedGroups;
 
@@ -143,18 +206,53 @@ class GroupsController extends GetxController {
 
   void showMyGroups() {
     currentGroupList.value = ownGroups.value;
+    currentGroupListType.value = GroupListType.myGroups;
   }
 
   void showJoinedGroups() {
     currentGroupList.value = joinedOtherGroups.value;
+    currentGroupListType.value = GroupListType.joinedGroups;
   }
 
   void showPublicGroups() {
     currentGroupList.value = notJoinedOtherGroups.value;
+    currentGroupListType.value = GroupListType.publicGroups;
   }
 
   Future<void> sendJoinRequest(Groups group) async {
-    Get.snackbar('Join Request', 'Request sent to join ${group.name}');
+    try {
+      String? token = await _sharedPreferencesService.getToken();
+      if (token == null) {
+        Get.snackbar('Error', 'User is not authenticated');
+        return;
+      }
+
+      var headers = {
+        'Accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+
+      var request = http.Request('POST', Uri.parse('http://195.88.87.77:8888/api/v1/joins/requests'));
+      request.body = json.encode({
+        "folderId": group.id
+      });
+      print(group.id);
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode == 200 || response.statusCode==201) {
+        // String responseBody = await response.stream.bytesToString();
+        // List jsonResponse = json.decode(responseBody);
+        Get.snackbar('successful', 'Request sent to join ${group.name}');
+      } else {
+        print(".................................................................${response.statusCode} ${response.reasonPhrase} ");
+        Get.snackbar('Error', 'Failed to load join requests: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print(".................................................................${e}");
+      Get.snackbar('Error', 'Failed to send join requests: $e');
+    }
   }
 
 }

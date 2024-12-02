@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../Theme/ThemeController.dart';
 import '../../../color_.dart';
 import '../controllers/JoinRequestToMyGroups_Controller.dart';
 import '../widgets/RequestCardWidget.dart';
@@ -25,9 +26,19 @@ class _RequestscardState extends State<Requestscard> {
 
   @override
   Widget build(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
+    final String currentTheme = themeController.currentTheme.value;
+
     return Scaffold(
+      backgroundColor: AppColors.background(context, currentTheme),
       appBar: AppBar(
-        title: Text("Requests for ${widget.groupName}"),
+        title: Text(
+          "requests_for_group".tr+"${widget.groupName}",
+          style: TextStyle(
+            color: AppColors.textPrimary(context, currentTheme),
+          ),
+        ),
+        backgroundColor: AppColors.background2(context, currentTheme),
       ),
       body: Obx(() {
         if (_joinRequestController.isLoading.value) {
@@ -37,8 +48,10 @@ class _RequestscardState extends State<Requestscard> {
         if (_joinRequestController.joinRequests.isEmpty) {
           return Center(
             child: Text(
-              "No join requests available",
-              style: TextStyle(color: color_.gray),
+              "no_join_requests_available".tr,
+              style: TextStyle(
+                color: AppColors.font(context, currentTheme),
+              ),
             ),
           );
         }

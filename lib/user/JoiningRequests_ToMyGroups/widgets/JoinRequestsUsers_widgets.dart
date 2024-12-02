@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../Theme/ThemeController.dart';
 import '../../../color_.dart';
 import '../screens/RequestsCard_screen.dart';
 
 class JoinRequestsUsers_widgets {
-  static Widget header() {
+  static Widget header(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
+    final String currentTheme = themeController.currentTheme.value;
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(
-        "Joining Requests to My Groups",
+        "joining_requests_to_my_groups".tr,
         style: TextStyle(
-          color: color_.gray,
+          color: AppColors.textPrimary(context, currentTheme),
           fontSize: 20,
           fontWeight: FontWeight.bold,
         ),
@@ -17,7 +22,8 @@ class JoinRequestsUsers_widgets {
     );
   }
 
-  static Widget list(List<dynamic> groups) {
+  static Widget list(
+      List<dynamic> groups, BuildContext context, String currentTheme) {
     return ListView.builder(
       itemCount: groups.length,
       itemBuilder: (context, index) {
@@ -49,13 +55,13 @@ class JoinRequestsUsers_widgets {
               width: MediaQuery.of(context).size.width * 0.8,
               margin: EdgeInsets.symmetric(vertical: 8),
               child: Card(
-                color: color_.gray,
+                color: AppColors.card(context, currentTheme),
                 child: ListTile(
                   title: Text(
                     group.name,
-                    style: TextStyle(color: color_.white),
+                    style: TextStyle(color: AppColors.textPrimary(context, currentTheme)),
                   ),
-                  trailing: Icon(Icons.group_add_rounded, color: color_.white),
+                  trailing: Icon(Icons.group_add_rounded, color: AppColors.textPrimary(context, currentTheme)),
                 ),
               ),
             ),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../color_.dart';
+import 'package:file_manager_internet_applications_project/Theme/ThemeController.dart'; // استيراد الـ ThemeController
+
 class GridItem extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -15,8 +18,10 @@ class GridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String theme = Get.find<ThemeController>().currentTheme.value;
+
     return Card(
-      color: Colors.white24,
+      color: AppColors.card(context, theme),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -29,14 +34,19 @@ class GridItem extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(child: Icon(icon, size: 50, color: Colors.white70)),
-              const SizedBox(height: 10),
-              Expanded(
-                child: Text(
-                  label,
-                  style: const TextStyle(color: Colors.white70, fontSize: 16),
-                  textAlign: TextAlign.center,
+              Icon(
+                icon,
+                size: 50,
+                color: AppColors.font(context, theme),
+              ),
+              const SizedBox(height: 30),
+              Text(
+                label,
+                style: TextStyle(
+                  color: AppColors.font(context, theme),
+                  fontSize: 16,
                 ),
+                textAlign: TextAlign.center,
               ),
             ],
           ),

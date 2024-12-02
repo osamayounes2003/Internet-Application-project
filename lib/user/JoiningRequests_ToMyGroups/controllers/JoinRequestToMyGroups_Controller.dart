@@ -29,8 +29,8 @@ class JoinRequestToMyGroupsController extends GetxController {
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
-
-      if (response.statusCode == 200) {
+      print(response.statusCode);
+      if (response.statusCode == 200 || response.statusCode==201) {
         String responseBody = await response.stream.bytesToString();
         List jsonResponse = json.decode(responseBody);
         joinRequests.value = jsonResponse.map((data) => JoinRequestToMyGroups.fromJson(data)).toList();

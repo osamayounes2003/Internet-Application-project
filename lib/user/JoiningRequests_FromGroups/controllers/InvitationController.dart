@@ -1,6 +1,7 @@
 import 'package:file_manager_internet_applications_project/SharedPreferences/shared_preferences_service.dart';
 import 'package:file_manager_internet_applications_project/color_.dart';
 import 'package:file_manager_internet_applications_project/user/JoiningRequests_FromGroups/models/InvitiationModel.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -48,7 +49,7 @@ class InvitationController extends GetxController {
     }
   }
 
-  Future<void> acceptInvitation(int invitationId) async {
+  Future<void> acceptInvitation(int invitationId,int folderId) async {
     try {
       String? token = await _sharedPreferencesService.getToken();
       if (token == null) {
@@ -69,6 +70,12 @@ class InvitationController extends GetxController {
       if (response.statusCode == 200) {
         print(await response.stream.bytesToString());
         fetchInvitations();
+
+        FirebaseMessaging messaging = FirebaseMessaging.instance;
+        String topic = "group$folderId";
+        await messaging.subscribeToTopic(topic);
+        print("Subscribed to Firebase Topic: $topic");
+
         Get.snackbar("success", "Successfully accepted the invitation",colorText:color_.white);
       } else {
         print(response.statusCode);

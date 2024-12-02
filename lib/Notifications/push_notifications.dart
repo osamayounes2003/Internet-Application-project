@@ -32,8 +32,8 @@ class PushNotifications {
     } catch (e) {
       print("Failed to get device token");
       if (maxRetries > 0) {
-        print("Retrying in 10 seconds...");
-        await Future.delayed(Duration(seconds: 10));
+        print("Retrying in 3 seconds...");
+        await Future.delayed(Duration(seconds: 3));
         return getFCMToken(maxRetries: maxRetries - 1);
       } else {
         return null;

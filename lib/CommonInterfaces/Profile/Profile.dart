@@ -1,7 +1,7 @@
-import 'package:file_manager_internet_applications_project/CustomComponent/CustomButton.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../CustomComponent/BaseScreen.dart';
+import '../../Theme/ThemeController.dart';
 import '../../color_.dart';
 import 'ProfileControlller.dart';
 
@@ -9,19 +9,24 @@ class Profile extends StatelessWidget {
   final ProfileController profileController = Get.put(ProfileController());
 
   Profile({super.key});
+
   @override
   Widget build(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
+    String currentTheme = themeController.currentTheme.value;
+
     return BaseScreen(
       child: Obx(() {
         if (profileController.isLoading.value) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: CircularProgressIndicator(color: AppColors.primary(context, currentTheme)));
         } else {
           return Container(
-            constraints: BoxConstraints(maxWidth: 800), // Set a maximum width
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20), // Padding around the container
+            constraints: BoxConstraints(maxWidth: 800),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20),
+            // color: AppColors.background(context, currentTheme),
             child: Column(
               mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start, // Align children to the start (left)
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 20),
                 LayoutBuilder(
@@ -35,40 +40,40 @@ class Profile extends StatelessWidget {
                               SizedBox(height: 8),
                               Text(
                                 "${profileController.fullname.value}",
-                                style: TextStyle(fontSize: 40, color: color_.font),
+                                style: TextStyle(fontSize: 40, color: AppColors.font(context, currentTheme)),
                               ),
                             ],
                           ),
                           SizedBox(width: 20),
-                          Expanded( // Use Expanded to fill the remaining space
+                          Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text("Role", style: TextStyle(fontSize: 15, color: color_.gray)),
+                                  child: Text("Role".tr, style: TextStyle(fontSize: 15, color: AppColors.gray(context, currentTheme))),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Text(
                                     "${profileController.role.value}",
-                                    style: TextStyle(fontSize: 18, color: color_.font),
+                                    style: TextStyle(fontSize: 18, color: AppColors.font(context, currentTheme)),
                                   ),
                                 ),
-                                Divider(color: color_.gray),
+                                Divider(color: AppColors.gray(context, currentTheme)),
                                 SizedBox(height: 15),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: Text("Email", style: TextStyle(fontSize: 15, color: color_.gray)),
+                                  child: Text("Email".tr, style: TextStyle(fontSize: 15, color: AppColors.gray(context, currentTheme))),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                   child: Text(
                                     "${profileController.email.value}",
-                                    style: TextStyle(fontSize: 18, color: color_.font),
+                                    style: TextStyle(fontSize: 18, color: AppColors.font(context, currentTheme)),
                                   ),
                                 ),
-                                Divider(color: color_.gray),
+                                Divider(color: AppColors.gray(context, currentTheme)),
                                 SizedBox(height: 15),
                               ],
                             ),
@@ -78,14 +83,14 @@ class Profile extends StatelessWidget {
                     } else {
                       return Column(
                         mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.center, // Align children to the start (left)
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(height: 20),
                           Image.asset("assets/profile.png", height: 200, width: 200),
                           SizedBox(height: 8),
                           Text(
                             "${profileController.fullname.value}",
-                            style: TextStyle(fontSize: 40, color: color_.font),
+                            style: TextStyle(fontSize: 40, color: AppColors.font(context, currentTheme)),
                           ),
                           SizedBox(height: 20),
                           Column(
@@ -93,26 +98,26 @@ class Profile extends StatelessWidget {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Text("Role", style: TextStyle(fontSize: 15, color: color_.gray)),
+                                child: Text("Role".tr, style: TextStyle(fontSize: 15, color: AppColors.gray(context, currentTheme))),
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Text(
                                   "${profileController.role.value}",
-                                  style: TextStyle(fontSize: 18, color: color_.font),
+                                  style: TextStyle(fontSize: 18, color: AppColors.font(context, currentTheme)),
                                 ),
                               ),
-                              Divider(color: color_.gray),
+                              Divider(color: AppColors.gray(context, currentTheme)),
                               SizedBox(height: 15),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Text("Email", style: TextStyle(fontSize: 15, color: color_.gray)),
+                                child: Text("Email".tr, style: TextStyle(fontSize: 15, color: AppColors.gray(context, currentTheme))),
                               ),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Text(
                                   "${profileController.email.value}",
-                                  style: TextStyle(fontSize: 18, color: color_.font),
+                                  style: TextStyle(fontSize: 18, color: AppColors.font(context, currentTheme)),
                                 ),
                               ),
                             ],
@@ -123,7 +128,7 @@ class Profile extends StatelessWidget {
                   },
                 ),
                 SizedBox(height: 20),
-                Divider(color: color_.gray),
+                Divider(color: AppColors.gray(context, currentTheme)),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -132,14 +137,22 @@ class Profile extends StatelessWidget {
                       onPressed: () {
                         Get.toNamed('ResetPasswordScreen');
                       },
-                      child: Text("Change Password"),
+                      child: Text(
+                        "Change Password".tr,
+                        style: TextStyle(color: AppColors.primary(context, currentTheme)),
+                      ),
                     ),
-                    CustomElevatedButton(
-                      color: color_.button,
-                      title: 'Logout',
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.button(context, currentTheme),
+                      ),
                       onPressed: () {
                         profileController.logout();
                       },
+                      child: Text(
+                        "Logout".tr,
+                        style: TextStyle(color: AppColors.fontOnBackground(context, currentTheme)),
+                      ),
                     ),
                   ],
                 ),
@@ -150,6 +163,4 @@ class Profile extends StatelessWidget {
       }),
     );
   }
-
-
 }

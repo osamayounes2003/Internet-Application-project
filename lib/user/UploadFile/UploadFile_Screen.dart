@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../CustomComponent/BaseScreen.dart';
+import '../../Theme/ThemeController.dart';
+import '../../color_.dart';
 import 'UploadFile_Controller.dart';
 
 class UploadFile_Screen extends StatelessWidget {
@@ -8,19 +10,23 @@ class UploadFile_Screen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
+    String currentTheme = themeController.currentTheme.value;
+
     final groupId = Get.arguments != null && Get.arguments.containsKey('groupId')
         ? Get.arguments['groupId']
         : null;
 
     return BaseScreen(
       child: Scaffold(
+        backgroundColor: AppColors.scaffold(context, currentTheme),
         body: SingleChildScrollView(
           child: Column(
             children: [
               Container(
                 height: MediaQuery.of(context).size.height * 0.6,
                 width: double.infinity,
-                color: Colors.black87,
+                color: AppColors.background(context, currentTheme),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: Column(
@@ -30,12 +36,16 @@ class UploadFile_Screen extends StatelessWidget {
                         "assets/SelectFile.png",
                         height: 150,
                         width: 150,
+                        color: AppColors.button(context, currentTheme),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 20.0),
                         child: Text(
-                          "Choose the file you want to upload",
-                          style: TextStyle(color: Colors.white70, fontSize: 25),
+                          "choose_file_to_upload".tr, // Translated text
+                          style: TextStyle(
+                            color: AppColors.font(context, currentTheme),
+                            fontSize: 25,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -45,13 +55,17 @@ class UploadFile_Screen extends StatelessWidget {
                           onPressed: () async {
                             await fileUploadController.selectFile();
                           },
-                          child: Text("Select File"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.button(context, currentTheme),
+                          ),
+                          child: Text("select_file".tr,style: TextStyle(color:AppColors.font(context, currentTheme) ),), // Translated text
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
+              // File name display box
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: Container(
@@ -59,7 +73,7 @@ class UploadFile_Screen extends StatelessWidget {
                   width: MediaQuery.of(context).size.width > 600 ? 400 : 300,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Colors.grey,
+                      color: AppColors.gray(context, currentTheme),
                       width: 1.0,
                     ),
                     borderRadius: BorderRadius.circular(8.0),
@@ -69,13 +83,14 @@ class UploadFile_Screen extends StatelessWidget {
                       return Text(
                         fileUploadController.selectedFileName.value.isNotEmpty
                             ? fileUploadController.selectedFileName.value
-                            : "No file selected",
-                        style: TextStyle(color: Colors.black87),
+                            : "no_file_selected".tr, // Translated text
+                        style: TextStyle(color: AppColors.font(context, currentTheme)), // Dynamic text color
                       );
                     }),
                   ),
                 ),
               ),
+              // Upload Button Section
               InkWell(
                 onTap: () async {
                   await fileUploadController.uploadFile(groupId);
@@ -86,11 +101,16 @@ class UploadFile_Screen extends StatelessWidget {
                       "assets/UploadFile.png",
                       height: 100,
                       width: 100,
+                      color: AppColors.button(context, currentTheme),
                     ),
-                    Text("Press to upload"),
+                    Text(
+                      "press_to_upload".tr, // Translated text
+                      style: TextStyle(color: AppColors.font(context, currentTheme)), // Dynamic font color
+                    ),
                   ],
                 ),
               ),
+              // Uploading Indicator
               Obx(() {
                 return fileUploadController.isUploading.value
                     ? CircularProgressIndicator()
