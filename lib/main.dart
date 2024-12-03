@@ -1,6 +1,8 @@
+import 'package:file_manager_internet_applications_project/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'Auth/refresh_token/refresh_token_controller.dart';
 import 'Loclaization/translations.dart';
 import 'Notifications/FireBase_Services.dart';
 import 'Notifications/Notifications_Services.dart';
@@ -11,7 +13,7 @@ import 'user/HomeUser/HomeUser_Screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Get.putAsync<RefreshTokenController>(() async => RefreshTokenController());
   final SharedPreferences prefs = await SharedPreferences.getInstance();
 
   final SharedPreferencesService sharedPreferencesService =
@@ -57,11 +59,13 @@ class MyApp extends StatelessWidget {
         locale: initialLocale,
         fallbackLocale: Locale('en'),
         theme: themeController.getThemeData(),
-        home: HomeUser_Screen(),
-        initialRoute: isLoggedIn
-            ? (userRole == 'USER' ? 'Groups' : 'home_user')
-            : 'login',
+        //home: SplashScreen(),
+        // home: HomeUser_Screen(),
+        // initialRoute: isLoggedIn
+        //     ? (userRole == 'USER' ? 'Groups' : 'home_user')
+        //     : 'login',
         getPages: AppRoutes.routes,
+        initialRoute: AppRoutes.splashScreen,
       );
     });
   }

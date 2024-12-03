@@ -1,4 +1,5 @@
 import 'package:file_manager_internet_applications_project/Theme/ChangeTheme_Screen.dart';
+import 'package:file_manager_internet_applications_project/splash/splash_screen.dart';
 import 'package:file_manager_internet_applications_project/user/MemberDetailes/MemberDetails-Screen.dart';
 import 'package:file_manager_internet_applications_project/user/RemoveOrLeaveUserFromGroup/RemoveUser_Screen.dart';
 import 'package:file_manager_internet_applications_project/user/files/booked_files_by_folder/screen/file_details_screen.dart';
@@ -47,6 +48,7 @@ class AppRoutes {
   static const String UpdateGroup = '/UpdateGroup';
   static const String MemberDetails = '/Member_Details';
   static const String FileDetails = '/File_Details';
+  static const String splashScreen = '/splash_screen';
 
   static List<GetPage> routes = [
     GetPage(name: login, page: () => LogIn_Screen()),
@@ -71,5 +73,6 @@ class AppRoutes {
     GetPage(name: UpdateGroup, page: () => UpdateGroupInfo_Screen()),
     GetPage(name: MemberDetails, page: () => UserDetailsScreen()),
     GetPage(name: FileDetails, page: () => FileDetailsScreen()),
+    GetPage(name: splashScreen, page:()=> SplashScreen())
   ];
 }

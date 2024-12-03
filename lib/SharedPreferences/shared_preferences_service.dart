@@ -8,6 +8,7 @@ class SharedPreferencesService {
     required String role,
     required String token,
     required String refreshToken,
+
   }) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -22,6 +23,14 @@ class SharedPreferencesService {
   Future<String?> getToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
+  }
+  Future<String?> getRefreshToken() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('refreshToken');
+  }
+  Future<void> saveRefreshToken(String refreshToken) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('refreshToken', refreshToken);
   }
 
   Future<String?> getFullName() async {
