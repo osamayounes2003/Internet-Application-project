@@ -1,16 +1,23 @@
-import 'package:file_manager_internet_applications_project/color_.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../SharedPreferences/shared_preferences_service.dart';
+import '../color_.dart';
+import 'UserBar.dart';
+import 'AdminBar.dart';
 import 'header.dart';
 import '../../CustomComponent/SideBar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../Theme/ThemeController.dart';
 
 class BaseScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final Widget child;
+  final SharedPreferencesService sharedPreferencesService = SharedPreferencesService();
 
   BaseScreen({Key? key, required this.child}) : super(key: key);
+
+  Future<String> _getUserRole() async {
+    return await sharedPreferencesService.getRole() ?? 'USER';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,23 +30,49 @@ class BaseScreen extends StatelessWidget {
       drawer: MediaQuery.of(context).size.width > 600
           ? null
           : Drawer(
-        // backgroundColor: Colors.red,
-        child: SidebarContent(),
+        child: FutureBuilder<String>(
+          future: _getUserRole(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text("Error loading role"));
+            }
+
+            String role = snapshot.data!;
+            return SidebarContent(
+              menuItems: role == 'ADMIN'
+                  ? AdminBar(context, currentTheme)
+                  : Userbar(context, currentTheme),
+            );
+          },
+        ),
       ),
       body: Row(
         children: [
           if (MediaQuery.of(context).size.width > 600)
             ClipRRect(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-              ),
+              borderRadius: BorderRadius.circular(20),
               child: Container(
                 width: 250,
                 color: AppColors.background2(context, currentTheme),
-                  child: SidebarContent(),
+                child: FutureBuilder<String>(
+                  future: _getUserRole(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text("Error loading role"));
+                    }
+
+                    String role = snapshot.data!;
+                    return SidebarContent(
+                      menuItems: role == 'ADMIN'
+                          ? AdminBar(context, currentTheme)
+                          : Userbar(context, currentTheme),
+                    );
+                  },
+                ),
               ),
             ),
           Expanded(
@@ -47,10 +80,12 @@ class BaseScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Header(scaffoldKey: scaffoldKey),
-                Expanded(child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: child,
-                )),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: child,
+                  ),
+                ),
               ],
             ),
           ),

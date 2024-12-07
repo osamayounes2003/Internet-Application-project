@@ -66,15 +66,17 @@ class InvitationController extends GetxController {
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
-
+print(invitationId);
+print(folderId);
+print(token);
       if (response.statusCode == 200) {
         print(await response.stream.bytesToString());
         fetchInvitations();
 
-        FirebaseMessaging messaging = FirebaseMessaging.instance;
-        String topic = "group$folderId";
-        await messaging.subscribeToTopic(topic);
-        print("Subscribed to Firebase Topic: $topic");
+        // FirebaseMessaging messaging = FirebaseMessaging.instance;
+        // String topic = "group$folderId";
+        // await messaging.subscribeToTopic(topic);
+        // print("Subscribed to Firebase Topic: $topic");
 
         Get.snackbar("success", "Successfully accepted the invitation",colorText:color_.white);
       } else {

@@ -93,17 +93,21 @@ class MyBookedFilesController extends GetxController {
   Future<void> fileCheckIn(int fileId) async {
     String? token =await _sharedPreferencesService.getToken();
     int? userId = await _sharedPreferencesService.getUserId() ;
+
     var headers = {
       'Content-Type': 'application/json',
       'Accept': '*/*',
-      'Authorization': 'Bearer {$token}'
+      'Authorization': 'Bearer $token'
     };
+    print(fileId);
+    print(userId);
     var request = http.Request(
         'POST', Uri.parse('http://195.88.87.77:8888/api/v1/files/check-in'));
     request.body = json.encode({"userId":userId, "fileId": fileId});
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
-    if (response.statusCode == 200) {
+    print(response.statusCode);
+    if (response.statusCode == 200 || response.statusCode==201) {
       print(await response.stream.bytesToString());
     } else {
       print(response.reasonPhrase);

@@ -7,6 +7,10 @@ import '../Theme/ThemeController.dart';
 import '../color_.dart';
 
 class SidebarContent extends StatelessWidget {
+  final List<Widget> menuItems;
+
+  SidebarContent({required this.menuItems});
+
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
@@ -35,21 +39,11 @@ class SidebarContent extends StatelessWidget {
             ],
           ),
         ),
-         Divider(color: AppColors.font(context, currentTheme)),
+        Divider(color: AppColors.font(context, currentTheme)),
         Expanded(
           child: ListView(
             padding: const EdgeInsets.all(0),
-            children: [
-              _buildListTile(context, Icons.home, "Home".tr, "/home_user", currentTheme),
-              _buildListTile(context, Icons.create_new_folder, "Add New Group".tr, "/CreateGroup", currentTheme),
-              _buildListTile(context, Icons.folder_copy, "Groups".tr, "/Groups", currentTheme),
-              _buildListTile(context, Icons.file_present_rounded, "My Booked file".tr, AppRoutes.myBookedFiles, currentTheme),
-              _buildListTile(context, Icons.person_add, "Joining Requests to My Groups".tr, "/JoiningRequests_toMyGroups", currentTheme),
-              // _buildListTile(context, Icons.check, "Check-in Files".tr, "/check_in_files", currentTheme),
-              _buildListTile(context, Icons.add_alert_outlined, "Joining Requests".tr, "/JoiningRequests", currentTheme),
-              _buildListTile(context, Icons.translate, "change language".tr, "", currentTheme, isLanguageChange: true),
-              _buildListTile(context, Icons.dark_mode_outlined, "Light/Dark".tr, "", currentTheme, ismodeChange: true),
-            ],
+            children: menuItems,
           ),
         ),
         Divider(color: AppColors.font(context, currentTheme), height: 1),
@@ -66,8 +60,6 @@ class SidebarContent extends StatelessWidget {
         if (isLanguageChange) {
           changeLanguage();
         } else if (ismodeChange) {
-          // themeController.toggleTheme();
-          // Get.offAllNamed('/home_user', arguments: {'themeChanged': true});
           Get.toNamed('/Change_Theme');
         } else {
           Get.toNamed(route);

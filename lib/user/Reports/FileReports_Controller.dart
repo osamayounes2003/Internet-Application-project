@@ -11,7 +11,6 @@ class DownloadFileReportController extends GetxController {
 
   Future<void> downloadReportForFile(int fileId, int folderId) async {
     isLoading.value = true;
-
     String? token = await _sharedPreferencesService.getToken();
 
     if (token == null) {

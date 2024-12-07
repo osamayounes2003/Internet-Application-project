@@ -7,7 +7,6 @@ import '../../../Theme/ThemeController.dart';
 import '../../../color_.dart';
 import '../../DeleteGroup/DeleteGroup_controller.dart';
 import '../../Groups/models/Groups_Model.dart';
-import '../../MemberDetailes/MemberDetails-Screen.dart';
 import '../../RemoveOrLeaveUserFromGroup/RemoveUser_Controller.dart';
 
 class Group_screen extends StatefulWidget {

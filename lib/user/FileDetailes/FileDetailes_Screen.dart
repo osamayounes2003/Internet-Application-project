@@ -1,3 +1,4 @@
+import 'package:file_manager_internet_applications_project/user/files/my_booked_files/controller/booked_files_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../CustomComponent/BaseScreen.dart';
@@ -28,6 +29,7 @@ class FileDetailsScreen extends StatelessWidget {
     final int folderId = file.folderId;
 
     final downloadReportController = Get.put(DownloadFileReportController());
+    MyBookedFilesController _MyBookedFilesController=Get.put(MyBookedFilesController());
 
     final themeController = Get.find<ThemeController>();
     String currentTheme = themeController.currentTheme.value;
@@ -93,7 +95,7 @@ class FileDetailsScreen extends StatelessWidget {
                             "Status: ${file.status}",
                             style: TextStyle(
                               fontSize: 16,
-                              color: AppColors.gray(context, currentTheme),
+                              color: AppColors.font(context, currentTheme),
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -101,7 +103,7 @@ class FileDetailsScreen extends StatelessWidget {
                             "Folder ID: ${file.folderId}",
                             style: TextStyle(
                               fontSize: 16,
-                              color: AppColors.gray(context, currentTheme),
+                              color: AppColors.font(context, currentTheme),
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -111,13 +113,14 @@ class FileDetailsScreen extends StatelessWidget {
                                 : "No user booked",
                             style: TextStyle(
                               fontSize: 16,
-                              color: AppColors.gray(context, currentTheme),
+                              color: AppColors.font(context, currentTheme),
                             ),
                           ),
                           file.bookedUser == null
                               ? ElevatedButton(
                             onPressed: () {
                               // إضافة عملية Check In
+                              _MyBookedFilesController.fileCheckIn(file.id);
                             },
                             child: Text("Check In"),
                             style: ElevatedButton.styleFrom(
@@ -152,7 +155,7 @@ class FileDetailsScreen extends StatelessWidget {
                       "Status: ${file.status}",
                       style: TextStyle(
                         fontSize: 16,
-                        color: AppColors.gray(context, currentTheme),
+                        color: AppColors.font(context, currentTheme),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -160,7 +163,7 @@ class FileDetailsScreen extends StatelessWidget {
                       "Folder ID: ${file.folderId}",
                       style: TextStyle(
                         fontSize: 16,
-                        color: AppColors.gray(context, currentTheme),
+                        color: AppColors.font(context, currentTheme),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -170,13 +173,15 @@ class FileDetailsScreen extends StatelessWidget {
                           : "No user booked",
                       style: TextStyle(
                         fontSize: 16,
-                        color: AppColors.gray(context, currentTheme),
+                        color: AppColors.font(context, currentTheme),
                       ),
                     ),
                     file.bookedUser == null
                         ? ElevatedButton(
                       onPressed: () {
+                        print("ffffffffffff");
                         // إضافة عملية Check In
+                        _MyBookedFilesController.fileCheckIn(file.id);
                       },
                       child: Text("Check In"),
                       style: ElevatedButton.styleFrom(

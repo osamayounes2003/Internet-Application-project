@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../CommonInterfaces/Profile/ProfileControlller.dart';
+import '../../CustomComponent/BaseScreen.dart';
 import '../../color_.dart';
 import '../../Theme/ThemeController.dart';
 import '../ReportAdmin/ReportAdmin_controller.dart';
@@ -16,9 +17,8 @@ class HomeAdmin_Screen extends StatelessWidget {
     final themeController = Get.find<ThemeController>();
     String currentTheme = themeController.currentTheme.value;
 
-    return Scaffold(
-      backgroundColor: color_.darkBackground,
-      body: Obx(() {
+    return BaseScreen(
+      child: Obx(() {
         if (profileController.isLoading.value) {
           return Center(
             child: CircularProgressIndicator(
@@ -120,9 +120,11 @@ class HomeAdmin_Screen extends StatelessWidget {
                           ],
                         ),
                       ),
-                     isWideScreen ?
-                     Expanded(child: SizedBox(width: 30,))
-                         : Container()
+                      isWideScreen
+                          ? Expanded(
+                        child: SizedBox(width: 30),
+                      )
+                          : Container()
                     ],
                   )
                       : Column(

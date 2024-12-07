@@ -2,8 +2,11 @@ import 'package:file_manager_internet_applications_project/Theme/ChangeTheme_Scr
 import 'package:file_manager_internet_applications_project/splash/splash_screen.dart';
 import 'package:file_manager_internet_applications_project/user/MemberDetailes/MemberDetails-Screen.dart';
 import 'package:file_manager_internet_applications_project/user/RemoveOrLeaveUserFromGroup/RemoveUser_Screen.dart';
-import 'package:file_manager_internet_applications_project/user/files/booked_files_by_folder/screen/file_details_screen.dart';
 
+import '../Admin/AllFiles_show/AllFiles_Screen.dart';
+import '../Admin/AllGroup-Show/AdminGroupShow_Screen.dart';
+import '../Admin/AllGroup-Show/AllGroupShow_Screen.dart';
+import '../Admin/AllUser_Show/allUser_Screen.dart';
 import '../user/FileDetailes/FileDetailes_Screen.dart';
 import '../user/UpdateGroupInfo/UpdateGroupInfo_Screen.dart';
 import '../user/files/booked_files_by_folder/screen/booked_files_by_folder_screen.dart';
@@ -49,6 +52,10 @@ class AppRoutes {
   static const String MemberDetails = '/Member_Details';
   static const String FileDetails = '/File_Details';
   static const String splashScreen = '/splash_screen';
+  static const String ShowGroupsAdmin = '/groups-admin';
+  static const String groupDetailAdmin = '/groupdetailes_admin';
+  static const String ALLUsersScreen = '/AdminUsersScreen';
+  static const String ALLFilesScreen = '/allfiles_admin';
 
   static List<GetPage> routes = [
     GetPage(name: login, page: () => LogIn_Screen()),
@@ -73,6 +80,10 @@ class AppRoutes {
     GetPage(name: UpdateGroup, page: () => UpdateGroupInfo_Screen()),
     GetPage(name: MemberDetails, page: () => UserDetailsScreen()),
     GetPage(name: FileDetails, page: () => FileDetailsScreen()),
-    GetPage(name: splashScreen, page:()=> SplashScreen())
+    GetPage(name: splashScreen, page:()=> SplashScreen()),
+    GetPage(name: ShowGroupsAdmin, page:()=> AdminGroupsScreen()),
+    GetPage(name: groupDetailAdmin, page:()=> AdminGroupShow_screen()),
+    GetPage(name: ALLUsersScreen, page:()=> AdminUsersScreen()),
+    GetPage(name: ALLFilesScreen, page:()=> AllFilesScreen()),
   ];
 }
