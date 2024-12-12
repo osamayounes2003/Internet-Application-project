@@ -7,6 +7,7 @@ import '../../user/DeleteGroup/DeleteGroup_controller.dart';
 import '../../user/Groups/controllers/Groups_Controller.dart';
 import '../../user/Groups/models/Groups_Model.dart';
 import 'AllGroupShow_controller.dart';
+
 class AdminGroupsScreen extends StatelessWidget {
   const AdminGroupsScreen({Key? key}) : super(key: key);
 
@@ -117,11 +118,14 @@ class GroupCard extends StatelessWidget {
             'group': group,
           });
         },
-        trailing: IconButton(
-          icon: Icon(Icons.delete, color: AppColors.font(context, currentTheme)),
-          onPressed: () {
-            _showDeleteConfirmationDialog(context, group.id, deleteGroupController);
-          },
+        trailing: Tooltip(
+          message: 'Delete group',
+          child: IconButton(
+            icon: Icon(Icons.delete, color: AppColors.font(context, currentTheme)),
+            onPressed: () {
+              _showDeleteConfirmationDialog(context, group.id, deleteGroupController);
+            },
+          ),
         ),
       ),
     );

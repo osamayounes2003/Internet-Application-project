@@ -1,13 +1,12 @@
-import 'package:file_manager_internet_applications_project/Admin/AllUser_Show/allUser_Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../CustomComponent/BaseScreen.dart';
 import '../../../Theme/ThemeController.dart';
 import '../../../color_.dart';
-import '../../user/Groups/models/Groups_Model.dart';
-import '../../user/InviteUserToGroup/controllers/UsersController.dart';
-import '../../user/Reports/UserReports_Controller.dart';
 import '../AllGroup-Show/AllGroupShow_controller.dart';
+import '../AllUser_Show/allUser_Controller.dart';
+import '../../user/Groups/models/Groups_Model.dart';
+import '../../user/Reports/UserReports_Controller.dart';
 
 class AdminUsersScreen extends StatelessWidget {
   const AdminUsersScreen({Key? key}) : super(key: key);
@@ -16,7 +15,7 @@ class AdminUsersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final AllUsersController usersController = Get.put(AllUsersController());
     final GroupsAdminController groupsAdminController = Get.put(GroupsAdminController());
-    final downloadReportController = Get.put(DownloadUserReportController());
+    final DownloadUserReportController downloadReportController = Get.put(DownloadUserReportController());
     final ThemeController themeController = Get.find<ThemeController>();
     final String currentTheme = themeController.currentTheme.value;
 
@@ -123,20 +122,25 @@ class UserCard extends StatelessWidget {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red),
-                  onPressed: () {
-                    _confirmDeleteUser(context, usersController, user.id);
-                  },
+                Tooltip(
+                  message: 'Delete User',
+                  child: IconButton(
+                    icon: Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      _confirmDeleteUser(context, usersController, user.id);
+                    },
+                  ),
                 ),
-
               ],
             ),
           ),
           ExpansionTile(
-            title: Text(
-              "Groups Information",
-              style: TextStyle(color: AppColors.font(context, currentTheme)),
+            title: Tooltip(
+              message: "Details about groups the user is involved in",
+              child: Text(
+                "Groups Information",
+                style: TextStyle(color: AppColors.font(context, currentTheme)),
+              ),
             ),
             children: [
               FutureBuilder(
@@ -160,9 +164,12 @@ class UserCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (groupData['adminGroups']!.isNotEmpty) ...[
-                            Text(
-                              "Admin of Groups:",
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.font(context, currentTheme)),
+                            Tooltip(
+                              message: "Groups where the user is an admin",
+                              child: Text(
+                                "Admin of Groups:",
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.font(context, currentTheme)),
+                              ),
                             ),
                             const SizedBox(height: 8),
                             ...groupData['adminGroups']!.map((group) {
@@ -177,14 +184,17 @@ class UserCard extends StatelessWidget {
                                     group.name,
                                     style: TextStyle(color: AppColors.font(context, currentTheme)),
                                   ),
-                                  trailing: IconButton(
-                                    icon: Icon(
-                                      Icons.download,
-                                      color: AppColors.primary(context, currentTheme),
+                                  trailing: Tooltip(
+                                    message: 'Download Report',
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.download,
+                                        color: AppColors.primary(context, currentTheme),
+                                      ),
+                                      onPressed: () {
+                                        downloadReportController.downloadReport(group.id, user.id);
+                                      },
                                     ),
-                                    onPressed: () {
-                                      downloadReportController.downloadReport(group.id, user.id);
-                                    },
                                   ),
                                 ),
                               );
@@ -192,9 +202,12 @@ class UserCard extends StatelessWidget {
                           ],
                           const SizedBox(height: 16),
                           if (groupData['memberGroups']!.isNotEmpty) ...[
-                            Text(
-                              "Member in Groups:",
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.font(context, currentTheme)),
+                            Tooltip(
+                              message: "Groups where the user is a member",
+                              child: Text(
+                                "Member in Groups:",
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.font(context, currentTheme)),
+                              ),
                             ),
                             const SizedBox(height: 8),
                             ...groupData['memberGroups']!.map((group) {
@@ -209,14 +222,17 @@ class UserCard extends StatelessWidget {
                                     group.name,
                                     style: TextStyle(color: AppColors.font(context, currentTheme)),
                                   ),
-                                  trailing: IconButton(
-                                    icon: Icon(
-                                      Icons.download,
-                                      color: AppColors.primary(context, currentTheme),
+                                  trailing: Tooltip(
+                                    message: 'Download Report',
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.download,
+                                        color: AppColors.primary(context, currentTheme),
+                                      ),
+                                      onPressed: () {
+                                        downloadReportController.downloadReport(group.id, user.id);
+                                      },
                                     ),
-                                    onPressed: () {
-                                      downloadReportController.downloadReport(group.id, user.id);
-                                    },
                                   ),
                                 ),
                               );
@@ -237,7 +253,6 @@ class UserCard extends StatelessWidget {
               ),
             ],
           )
-
         ],
       ),
     );
@@ -267,8 +282,6 @@ class UserCard extends StatelessWidget {
       },
     );
   }
-
-
 
   Future<Map<String, List<Groups>>> _fetchUserGroups(GroupsAdminController groupsController, int userId) async {
     final adminGroups = await groupsController.fetchGroupsByAdmin(userId);

@@ -7,7 +7,6 @@ import '../../../../CustomComponent/CustomButton.dart';
 import '../../../UploadFile/UploadFile_Model.dart';
 import '../../my_booked_files/widgets/detail_row.dart';
 
-
 class FileDetailScreen extends StatelessWidget {
   final FileModel file;
 
@@ -15,7 +14,6 @@ class FileDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
 
     return Scaffold(
       appBar: AppBar(
@@ -32,29 +30,44 @@ class FileDetailScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    DetailRow(label: 'Name:', value: file.name ?? 'Unknown'),
-                    DetailRow(label: 'URL:', value: file.url ?? 'No URL'),
-                    DetailRow(
-                        label: 'Status:',
-                        value: file.status == 'UNAVAILABLE'
-                            ? '!${file.status}'
-                            : 'AVAILABLE'),
+                    Tooltip(
+                      message: 'File Name', // Tooltip for the file name
+                      child: DetailRow(label: 'Name:', value: file.name ?? 'Unknown'),
+                    ),
+                    Tooltip(
+                      message: 'File URL', // Tooltip for the URL
+                      child: DetailRow(label: 'URL:', value: file.url ?? 'No URL'),
+                    ),
+                    Tooltip(
+                      message: 'File Status', // Tooltip for the file status
+                      child: DetailRow(
+                          label: 'Status:',
+                          value: file.status == 'UNAVAILABLE'
+                              ? '!${file.status}'
+                              : 'AVAILABLE'),
+                    ),
                     SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        CustomElevatedButton(
-                            title: 'Check Out', onPressed: () {
-                        }),
-                        CustomElevatedButton(
-                          title: 'Report',
-                          onPressed: () {
-                          },
+                        Tooltip(
+                          message: 'Click to Check Out', // Tooltip for the Check Out button
+                          child: CustomElevatedButton(
+                              title: 'Check Out', onPressed: () {}),
                         ),
-                        CustomElevatedButton(
-                          title: 'Edit',
-                          onPressed: () {
-                          },
+                        Tooltip(
+                          message: 'Report the file', // Tooltip for the Report button
+                          child: CustomElevatedButton(
+                            title: 'Report',
+                            onPressed: () {},
+                          ),
+                        ),
+                        Tooltip(
+                          message: 'Edit file details', // Tooltip for the Edit button
+                          child: CustomElevatedButton(
+                            title: 'Edit',
+                            onPressed: () {},
+                          ),
                         ),
                       ],
                     ),
@@ -67,5 +80,4 @@ class FileDetailScreen extends StatelessWidget {
       ),
     );
   }
-
 }

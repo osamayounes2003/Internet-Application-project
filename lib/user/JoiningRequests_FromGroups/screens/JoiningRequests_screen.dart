@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../Theme/ThemeController.dart';
 import '../../../color_.dart';
-import '../widgets/JoiningRequests_widgets.dart';
+import 'package:intl/intl.dart';
 
 class JoiningRequests_screen extends StatelessWidget {
   JoiningRequests_screen({Key? key}) : super(key: key);
@@ -20,7 +20,20 @@ class JoiningRequests_screen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          JoiningRequests_widgets.titleText("Joining Requests".tr, context),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GetBuilder<ThemeController>(builder: (themeController) {
+              final currentTheme = themeController.currentTheme.value;
+              return Text(
+                "Joining Requests".tr,
+                style: TextStyle(
+                  color: AppColors.textPrimary(context, currentTheme),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              );
+            }),
+          ),
           const SizedBox(height: 10),
           Expanded(
             child: Obx(() {
@@ -39,7 +52,55 @@ class JoiningRequests_screen extends StatelessWidget {
                 itemCount: _controller.invitations.length,
                 itemBuilder: (context, index) {
                   final invitation = _controller.invitations[index];
-                  return JoiningRequests_widgets.invitationCard(context, invitation, _controller);
+                  return GetBuilder<ThemeController>(builder: (themeController) {
+                    final currentTheme = themeController.currentTheme.value;
+                    return Card(
+                      color: AppColors.background2(context, currentTheme),
+                      child: ListTile(
+                        title: Text(
+                          invitation.folderName,
+                          style: TextStyle(color: AppColors.background(context, currentTheme)),
+                        ),
+                        subtitle: Text(
+                          "Owner".tr + ": ${invitation.ownerName} \n " +
+                              "Sent At".tr + ": ${DateFormat('yyyy-MM-dd HH:mm').format(invitation.sendAt)}",
+                          style: TextStyle(color: AppColors.font(context, currentTheme)),
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Tooltip(
+                              message: "Accept Invitation",
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors.background(context, currentTheme),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: IconButton(
+                                  icon: Icon(Icons.check, color: Colors.green),
+                                  onPressed: () => _controller.acceptInvitation(invitation.invitationId, invitation.folderId),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Tooltip(
+                              message: "Reject Invitation",
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors.background(context, currentTheme),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: IconButton(
+                                  icon: Icon(Icons.close, color: Colors.red),
+                                  onPressed: () => _controller.rejectInvitation(invitation.invitationId),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  });
                 },
               );
             }),

@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,16 +11,15 @@ import 'file_details_screen.dart'; // Import the detail screen
 class MyBookedFiles extends StatelessWidget {
   final MyBookedFilesController controller = Get.put(MyBookedFilesController());
 
-   MyBookedFiles({super.key});
+  MyBookedFiles({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(' My Booked Files'),
+        title: Text('My Booked Files'),
       ),
-      body:
-      Obx(() {
+      body: Obx(() {
         if (controller.isLoading.value) {
           return Center(child: CircularProgressIndicator(color: color_.black,));
         }
@@ -35,15 +33,12 @@ class MyBookedFiles extends StatelessWidget {
               trailing: Icon(Icons.file_copy_sharp),
               subtitle: Text('Status: ${file.status}'),
               onTap: () {
-
                 Get.to(() => FileDetailScreen(file: file));
               },
             );
           },
         );
       }),
-
-
     );
   }
 }

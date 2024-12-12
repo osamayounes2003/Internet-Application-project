@@ -16,7 +16,7 @@ class FileDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MyBookedFilesController myBookedFilesController =
-        Get.put(MyBookedFilesController());
+    Get.put(MyBookedFilesController());
 
     return Scaffold(
       appBar: AppBar(
@@ -36,26 +36,41 @@ class FileDetailScreen extends StatelessWidget {
                     DetailRow(label: 'Name:', value: file.name ?? 'Unknown'),
                     DetailRow(label: 'URL:', value: file.url ?? 'No URL'),
                     DetailRow(
-                        label: 'Status:',
-                        value: file.status == 'UNAVAILABLE'
-                            ? '!${file.status}'
-                            : 'AVAILABLE'),
+                      label: 'Status:',
+                      value: file.status == 'UNAVAILABLE'
+                          ? '!${file.status}'
+                          : 'AVAILABLE',
+                    ),
                     SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        CustomElevatedButton(
-                            title: 'Check Out', onPressed: () {
-                        }),
-                        CustomElevatedButton(
-                          title: 'Report',
-                          onPressed: () {
-                          },
+                        Tooltip(
+                          message: 'Click Check Out File', // Tooltip for Check Out button
+                          child: CustomElevatedButton(
+                            title: 'Check Out',
+                            onPressed: () {
+                              // Handle Check Out action
+                            },
+                          ),
                         ),
-                        CustomElevatedButton(
-                          title: 'Edit',
-                          onPressed: () {
-                          },
+                        Tooltip(
+                          message: 'Click Report File', // Tooltip for Report button
+                          child: CustomElevatedButton(
+                            title: 'Report',
+                            onPressed: () {
+                              // Handle Report action
+                            },
+                          ),
+                        ),
+                        Tooltip(
+                          message: 'Click Edit File', // Tooltip for Edit button
+                          child: CustomElevatedButton(
+                            title: 'Edit',
+                            onPressed: () {
+                              // Handle Edit action
+                            },
+                          ),
                         ),
                       ],
                     ),

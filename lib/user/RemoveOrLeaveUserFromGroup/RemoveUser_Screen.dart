@@ -73,23 +73,26 @@ class _RemoveUser_screenState extends State<RemoveUser_screen> {
                         user.email,
                         style: TextStyle(color: Colors.white70),
                       ),
-                      trailing: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectedUserId.value = isSelected ? 0 : user.id;
-                          });
-                        },
-                        child: Container(
-                          width: 24,
-                          height: 24,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: isSelected ? Colors.white : Colors.transparent,
-                            border: Border.all(color: Colors.white, width: 1),
+                      trailing: Tooltip(
+                        message: isSelected ? "Deselect User" : "Select User",
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedUserId.value = isSelected ? 0 : user.id;
+                            });
+                          },
+                          child: Container(
+                            width: 24,
+                            height: 24,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: isSelected ? Colors.white : Colors.transparent,
+                              border: Border.all(color: Colors.white, width: 1),
+                            ),
+                            child: isSelected
+                                ? Icon(Icons.check, color: color_.gray, size: 16)
+                                : null,
                           ),
-                          child: isSelected
-                              ? Icon(Icons.check, color: color_.gray, size: 16)
-                              : null,
                         ),
                       ),
                     ),
@@ -100,40 +103,42 @@ class _RemoveUser_screenState extends State<RemoveUser_screen> {
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Center(
-                child: ElevatedButton(
-                  onPressed: selectedUserId.value != 0 &&
-                      !removeUserController.isLoading.value
-                      ? () async {
-                    if (groupId != null) {
-                      await removeUserController.removeUser(
-                        groupId!,
-                        userId: selectedUserId.value,
-                      );
+                child: Tooltip(
+                  message: "Click to remove the selected user",
+                  child: ElevatedButton(
+                    onPressed: selectedUserId.value != 0 && !removeUserController.isLoading.value
+                        ? () async {
+                      if (groupId != null) {
+                        await removeUserController.removeUser(
+                          groupId!,
+                          userId: selectedUserId.value,
+                        );
+                      }
                     }
-                  }
-                      : null,
-                  child: removeUserController.isLoading.value
-                      ? CircularProgressIndicator(color: Colors.white)
-                      : Text(
-                    "Remove User",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        : null,
+                    child: removeUserController.isLoading.value
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                      "Remove User",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        ),
                       ),
-                    ),
-                    padding: MaterialStateProperty.all(
-                      EdgeInsets.symmetric(horizontal: 50, vertical: 12),
-                    ),
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.disabled)) {
-                          return color_.background2;
-                        }
-                        return color_.button;
-                      },
+                      padding: MaterialStateProperty.all(
+                        EdgeInsets.symmetric(horizontal: 50, vertical: 12),
+                      ),
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.disabled)) {
+                            return color_.background2;
+                          }
+                          return color_.button;
+                        },
+                      ),
                     ),
                   ),
                 ),

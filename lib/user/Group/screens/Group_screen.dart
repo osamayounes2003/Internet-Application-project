@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../../CustomComponent/BaseScreen.dart';
 import '../../../CustomComponent/CustomButton.dart';
 import '../../../Theme/ThemeController.dart';
@@ -25,12 +24,9 @@ class _GroupScreenState extends State<Group_screen> {
   final RemoveUserController removeUserController = Get.put(RemoveUserController());
   final DeleteGroupController deleteGroupController = Get.put(DeleteGroupController());
 
-
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
     final Map<String, dynamic>? arguments = Get.arguments;
 
     if (arguments != null) {
@@ -40,7 +36,6 @@ class _GroupScreenState extends State<Group_screen> {
 
     if (group != null) {
       print("Group name: ${group!.name}, Admin status: $isAdmin");
-
       members = group!.listOfUsers.map((user) => user.user.fullname).toList();
       uploadedFiles = group!.listOfFiles;
     } else {
@@ -57,7 +52,7 @@ class _GroupScreenState extends State<Group_screen> {
       return BaseScreen(
         child: Center(
           child: Text("no_group_selected".tr,
-              style: TextStyle(color:  AppColors.font(context, themeController.currentTheme.value), fontSize: 18)),
+              style: TextStyle(color: AppColors.font(context, themeController.currentTheme.value), fontSize: 18)),
         ),
       );
     }
@@ -79,20 +74,16 @@ class _GroupScreenState extends State<Group_screen> {
                         Text(
                           group!.name,
                           style: TextStyle(
-                            color:  AppColors.font(context, themeController.currentTheme.value),
-                            fontSize: MediaQuery.of(context).size.width > 600
-                                ? 24
-                                : 20,
+                            color: AppColors.font(context, themeController.currentTheme.value),
+                            fontSize: MediaQuery.of(context).size.width > 600 ? 24 : 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         Text(
                           group!.owner!.fullname.toString(),
                           style: TextStyle(
-                            color:  AppColors.font(context, themeController.currentTheme.value),
-                            fontSize: MediaQuery.of(context).size.width > 600
-                                ? 20
-                                : 16,
+                            color: AppColors.font(context, themeController.currentTheme.value),
+                            fontSize: MediaQuery.of(context).size.width > 600 ? 20 : 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -100,17 +91,18 @@ class _GroupScreenState extends State<Group_screen> {
                     ),
                     if (isAdmin)
                       PopupMenuButton<String>(
-                        icon: Icon(Icons.settings, color: AppColors.button(context, themeController.currentTheme.value)),
+                        icon: CustomTooltip(
+                          message: "Group settings",
+                          child: Icon(Icons.settings, color: AppColors.button(context, themeController.currentTheme.value)),
+                        ),
                         onSelected: (String value) async {
                           switch (value) {
                             case 'add_file':
                               print("Add File");
-                              Get.toNamed("/upload",
-                                  arguments: {'groupId': group!.id});
+                              Get.toNamed("/upload", arguments: {'groupId': group!.id});
                               break;
                             case 'invite_user':
-                              Get.toNamed("/InviteUser",
-                                  arguments: {'groupId': group!.id});
+                              Get.toNamed("/InviteUser", arguments: {'groupId': group!.id});
                               break;
                             case 'file_requests':
                               print("File Requests");
@@ -144,49 +136,32 @@ class _GroupScreenState extends State<Group_screen> {
                               break;
                           }
                         },
-                        itemBuilder: (BuildContext context) =>
-                             <PopupMenuEntry<String>>[
-                                PopupMenuItem(
-                                  value: 'add_file',
-                                  child: Text("add_file".tr),
-                                ),
-                                PopupMenuItem(
-                                  value: 'invite_user',
-                                  child: Text("invite_user".tr),
-                                ),
-                                PopupMenuItem(
-                                  value: 'file_requests',
-                                  child: Text("file_requests".tr),
-                                ),
-                                PopupMenuItem(
-                                  value: 'remove user',
-                                  child: Text("remove_user".tr),
-                                ),
-                               PopupMenuItem(
-                                 value: 'Edit Group',
-                                 child: Text("edit_group".tr),
-                               ), PopupMenuItem(
-                                 value: 'delete Group',
-                                 child: Text("delete_group".tr),
-                               ),
-                              ]
-
+                        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                          PopupMenuItem(value: 'add_file', child: Text("add_file".tr)),
+                          PopupMenuItem(value: 'invite_user', child: Text("invite_user".tr)),
+                          PopupMenuItem(value: 'file_requests', child: Text("file_requests".tr)),
+                          PopupMenuItem(value: 'remove user', child: Text("remove_user".tr)),
+                          PopupMenuItem(value: 'Edit Group', child: Text("edit_group".tr)),
+                          PopupMenuItem(value: 'delete Group', child: Text("delete_group".tr)),
+                        ],
                       ),
-                      if(!isAdmin)
+                    if (!isAdmin)
                       PopupMenuButton<String>(
-                        icon: Icon(Icons.settings, color:  AppColors.button(context, themeController.currentTheme.value)),
+                        icon: CustomTooltip(
+                          message: "Group settings",
+                          child: Icon(Icons.settings, color: AppColors.button(context, themeController.currentTheme.value)),
+                        ),
                         onSelected: (String value) async {
                           switch (value) {
                             case 'add_file':
                               print("Add File");
-                              Get.toNamed("/upload",
-                                  arguments: {'groupId': group!.id});
+                              Get.toNamed("/upload", arguments: {'groupId': group!.id});
                               break;
                             case 'leave group':
                               print(group?.id);
                               final confirmed = await Get.defaultDialog<bool>(
-                                title: 'Confirm Delete',
-                                middleText: 'Are you sure you want to delete this group?',
+                                title: 'Confirm Leave',
+                                middleText: 'Are you sure you want to leave this group?',
                                 onCancel: () => false,
                                 onConfirm: () async {
                                   await removeUserController.removeUser(group!.id, isme: true);
@@ -196,17 +171,10 @@ class _GroupScreenState extends State<Group_screen> {
                               break;
                           }
                         },
-                        itemBuilder: (BuildContext context) =>
-                             <PopupMenuEntry<String>>[
-                                PopupMenuItem(
-                                  value: 'add_file',
-                                  child: Text("add_file".tr),
-                                ),
-                                PopupMenuItem(
-                                  value: 'leave group',
-                                  child: Text("leave_group".tr),
-                                ),
-                              ]
+                        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                          PopupMenuItem(value: 'add_file', child: Text("add_file".tr)),
+                          PopupMenuItem(value: 'leave group', child: Text("leave_group".tr)),
+                        ],
                       ),
                   ],
                 ),
@@ -214,26 +182,32 @@ class _GroupScreenState extends State<Group_screen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: CustomElevatedButton(
-                        title: "files".tr,
-                        onPressed: () {
-                          setState(() {
-                            currentView = 'Files';
-                          });
-                        },
-                        color:  AppColors.button(context, themeController.currentTheme.value),
+                      child: CustomTooltip(
+                        message: "View uploaded files",
+                        child: CustomElevatedButton(
+                          title: "files".tr,
+                          onPressed: () {
+                            setState(() {
+                              currentView = 'Files';
+                            });
+                          },
+                          color: AppColors.button(context, themeController.currentTheme.value),
+                        ),
                       ),
                     ),
                     SizedBox(width: 2),
                     Expanded(
-                      child: CustomElevatedButton(
-                        title: "members".tr,
-                        onPressed: () {
-                          setState(() {
-                            currentView = 'Members';
-                          });
-                        },
-                        color:  AppColors.button(context, themeController.currentTheme.value),
+                      child: CustomTooltip(
+                        message: "View group members",
+                        child: CustomElevatedButton(
+                          title: "members".tr,
+                          onPressed: () {
+                            setState(() {
+                              currentView = 'Members';
+                            });
+                          },
+                          color: AppColors.button(context, themeController.currentTheme.value),
+                        ),
                       ),
                     ),
                   ],
@@ -252,7 +226,6 @@ class _GroupScreenState extends State<Group_screen> {
     );
   }
 }
-
 
 class FilesTab extends StatelessWidget {
   final List<File> uploadedFiles;
@@ -373,6 +346,44 @@ class MembersTab extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class CustomTooltip extends StatelessWidget {
+  final String message;
+  final Widget child;
+
+  const CustomTooltip({
+    Key? key,
+    required this.message,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: message,
+      decoration: BoxDecoration(
+        color: Colors.grey[850],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.green, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black,
+            blurRadius: 4,
+            offset: Offset(2, 2),
+          ),
+        ],
+      ),
+      textStyle: TextStyle(
+        color: Colors.white,
+        fontSize: 14,
+      ),
+      padding: EdgeInsets.all(8),
+      verticalOffset: 20,
+      preferBelow: true,
+      child: child,
     );
   }
 }

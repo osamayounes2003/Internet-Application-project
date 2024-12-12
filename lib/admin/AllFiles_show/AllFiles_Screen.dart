@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../color_.dart';
 import '../../../Theme/ThemeController.dart';
+import '../../CustomComponent/ToolTip.dart';
 import '../../user/Reports/FileReports_Controller.dart';
 import 'AllFiles_Controller.dart';
+import 'package:flutter/material.dart';
 
 class AllFilesScreen extends StatelessWidget {
   @override
@@ -33,23 +35,35 @@ class AllFilesScreen extends StatelessWidget {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
               color: AppColors.background(context, currentTheme),
               child: ListTile(
-                leading: Icon(
-                  file['status'] == 'AVAILABLE' ? Icons.check_circle : Icons.warning,
-                  color: file['status'] == 'AVAILABLE' ? Colors.green : Colors.red,
+                leading: CustomTooltip(
+                  message: file['status'] == 'AVAILABLE' ? 'File is available' : 'File is not available',
+                  child: Icon(
+                    file['status'] == 'AVAILABLE' ? Icons.check_circle : Icons.warning,
+                    color: file['status'] == 'AVAILABLE' ? Colors.green : Colors.red,
+                  ),
                 ),
-                title: Text(
-                  file['name'],
-                  style: TextStyle(color: AppColors.font(context, currentTheme)),
+                title: CustomTooltip(
+                  message: "File name: ${file['name']}",
+                  child: Text(
+                    file['name'],
+                    style: TextStyle(color: AppColors.font(context, currentTheme)),
+                  ),
                 ),
-                subtitle: Text(
-                  "Status: ${file['status']}\nBooked by: ${file['bookedUser']?['fullname'] ?? 'None'}",
-                  style: TextStyle(color: AppColors.gray(context, currentTheme)),
+                subtitle: CustomTooltip(
+                  message: "Status: ${file['status']}\nBooked by: ${file['bookedUser']?['fullname'] ?? 'None'}",
+                  child: Text(
+                    "Status: ${file['status']}\nBooked by: ${file['bookedUser']?['fullname'] ?? 'None'}",
+                    style: TextStyle(color: AppColors.gray(context, currentTheme)),
+                  ),
                 ),
-                trailing: IconButton(
-                  icon: Icon(Icons.download, color: AppColors.primary(context, currentTheme)),
-                  onPressed: () {
-                    downloadReportController.downloadReportForFile(file['id'], file['folderId']);
-                  },
+                trailing: CustomTooltip(
+                  message: 'Download file',
+                  child: IconButton(
+                    icon: Icon(Icons.download, color: AppColors.primary(context, currentTheme)),
+                    onPressed: () {
+                      downloadReportController.downloadReportForFile(file['id'], file['folderId']);
+                    },
+                  ),
                 ),
               ),
             );

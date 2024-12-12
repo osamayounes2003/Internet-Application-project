@@ -1,4 +1,3 @@
-
 import 'package:file_manager_internet_applications_project/user/files/booked_files_by_folder/controller/booked_files_by_folder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,7 @@ import '../../../../color_.dart';
 import '../../my_booked_files/screen/file_details_screen.dart';
 
 class BookedFilesByFolderScreen extends StatelessWidget {
- BookedFilesByFolderController controller = Get.put(BookedFilesByFolderController());
+  BookedFilesByFolderController controller = Get.put(BookedFilesByFolderController());
 
   @override
   Widget build(BuildContext context) {
@@ -18,29 +17,28 @@ class BookedFilesByFolderScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Booked files '),
       ),
-      body:
-      Obx(() {
+      body: Obx(() {
         if (controller.isLoading.value) {
-          return Center(child: CircularProgressIndicator(color: color_.black,));
+          return Center(child: CircularProgressIndicator(color: color_.black));
         }
 
         return ListView.builder(
           itemCount: controller.filesOfFolder.length,
           itemBuilder: (context, index) {
             final file = controller.filesOfFolder[index];
-            return ListTile(
-              title: Text(file.name),
-              subtitle: Text('Status: ${file.status}'),
-              onTap: () {
-
-                Get.to(() => FileDetailScreen(file: file));
-              },
+            return Tooltip(
+              message: 'Tap to see details', // Tooltip for the ListTile
+              child: ListTile(
+                title: Text(file.name),
+                subtitle: Text('Status: ${file.status}'),
+                onTap: () {
+                  Get.to(() => FileDetailScreen(file: file));
+                },
+              ),
             );
           },
         );
       }),
-
-
     );
   }
 }

@@ -69,7 +69,7 @@ class InvitationController extends GetxController {
 print(invitationId);
 print(folderId);
 print(token);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 204) {
         print(await response.stream.bytesToString());
         fetchInvitations();
 

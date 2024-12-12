@@ -47,11 +47,9 @@ class _GroupScreenState extends State<AdminGroupShow_screen> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
-
     final themeController = Get.find<ThemeController>();
     String currentTheme = themeController.currentTheme.value;
     final downloadReportController = Get.put(DownloadUserReportController());
-
 
     if (group == null) {
       return BaseScreen(
@@ -104,26 +102,32 @@ class _GroupScreenState extends State<AdminGroupShow_screen> with SingleTickerPr
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      child: CustomElevatedButton(
-                        title: "files".tr,
-                        onPressed: () {
-                          setState(() {
-                            currentView = 'Files';
-                          });
-                        },
-                        color: AppColors.button(context, themeController.currentTheme.value),
+                      child: Tooltip(
+                        message: "View group files",
+                        child: CustomElevatedButton(
+                          title: "files".tr,
+                          onPressed: () {
+                            setState(() {
+                              currentView = 'Files';
+                            });
+                          },
+                          color: AppColors.button(context, themeController.currentTheme.value),
+                        ),
                       ),
                     ),
                     SizedBox(width: 2),
                     Expanded(
-                      child: CustomElevatedButton(
-                        title: "members".tr,
-                        onPressed: () {
-                          setState(() {
-                            currentView = 'Members';
-                          });
-                        },
-                        color: AppColors.button(context, themeController.currentTheme.value),
+                      child: Tooltip(
+                        message: "View group members",
+                        child: CustomElevatedButton(
+                          title: "members".tr,
+                          onPressed: () {
+                            setState(() {
+                              currentView = 'Members';
+                            });
+                          },
+                          color: AppColors.button(context, themeController.currentTheme.value),
+                        ),
                       ),
                     ),
                   ],
@@ -138,28 +142,34 @@ class _GroupScreenState extends State<AdminGroupShow_screen> with SingleTickerPr
                         TabBar(
                           controller: _tabController,
                           tabs: [
-                            Tab(text: 'ACCEPTED'),
-                            Tab(text: 'INVITATION'),
-                            Tab(text: 'REQUEST'),
+                            Tooltip(
+                              message: 'View members who have joined the group',
+                              child: Tab(text: 'Joined'),
+                            ),
+                            Tooltip(
+                              message: 'View members whose requests are pending',
+                              child: Tab(text: 'Pending'),
+                            ),
+                            Tooltip(
+                              message: 'View members who are banned from the group',
+                              child: Tab(text: 'Banned'),
+                            ),
                           ],
                         ),
                         Expanded(
                           child: TabBarView(
                             controller: _tabController,
                             children: [
-                              // Show Accepted Users
-                              UsersListTab(status: 'ACCEPTED', groupId: group!.id,currentTheme: currentTheme,downloadReportController: downloadReportController,),
-                              // Show Invitation Users
-                              UsersListTab(status: 'INVITATION', groupId: group!.id,currentTheme: currentTheme,downloadReportController: downloadReportController,),
-                              // Show Request Users
-                              UsersListTab(status: 'REQUEST', groupId: group!.id,currentTheme: currentTheme,downloadReportController: downloadReportController,),
+                              MembersListView(members: members),
+                              const Center(child: Text('Pending')),
+                              const Center(child: Text('Banned')),
                             ],
                           ),
                         ),
                       ],
                     ),
                   )
-                      : FilesTab(uploadedFiles: uploadedFiles),
+                      : FilesListView(files: uploadedFiles),
                 ),
               ],
             ),
@@ -170,44 +180,34 @@ class _GroupScreenState extends State<AdminGroupShow_screen> with SingleTickerPr
   }
 }
 
-class UsersListTab extends StatelessWidget {
-  final String status;
-  final int groupId;
-  final String currentTheme;
-  final DownloadUserReportController downloadReportController;
-
-
-  const UsersListTab({required this.status, required this.groupId, required this.currentTheme, required this.downloadReportController});
+class MembersListView extends StatelessWidget {
+  final List<String> members;
+  const MembersListView({super.key, required this.members});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<GroupsAdminController>();
-
-    List<UserInFolder> filteredUsers = [];
-    if (status == 'ACCEPTED') {
-      filteredUsers = controller.acceptedList;
-    } else if (status == 'INVITATION') {
-      filteredUsers = controller.invitationList;
-    } else if (status == 'REQUEST') {
-      filteredUsers = controller.requestList;
-    }
-
     return ListView.builder(
-      itemCount: filteredUsers.length,
+      itemCount: members.length,
       itemBuilder: (context, index) {
-        final user = filteredUsers[index];
         return ListTile(
-          title: Text(user.user.fullname),
-          subtitle: Text(user.user.email),
-          trailing: IconButton(
-            icon: Icon(
-              Icons.report_problem,
-              color: AppColors.primary(context, currentTheme),
-            ),
-            onPressed: () {
-              downloadReportController.downloadReport(groupId, user.user.id);
-            },
-          ),
+          title: Text(members[index]),
+        );
+      },
+    );
+  }
+}
+
+class FilesListView extends StatelessWidget {
+  final List<File> files;
+  const FilesListView({super.key, required this.files});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: files.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(files[index].name),
         );
       },
     );

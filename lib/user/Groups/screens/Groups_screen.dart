@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../CustomComponent/BaseScreen.dart';
+import '../../../CustomComponent/ToolTip.dart';
 import '../../../Theme/ThemeController.dart';
 import '../../../color_.dart';
 import '../controllers/Groups_Controller.dart';
-import '../widgets/Groups_widgets.dart';
+import '../../../CustomComponent/CustomButton.dart';
 
 class Groups_screen extends StatelessWidget {
   const Groups_screen({Key? key}) : super(key: key);
@@ -26,7 +27,7 @@ class Groups_screen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // حقل البحث
+                // Search field
                 TextField(
                   onChanged: (query) {
                     groupsController.searchQuery.value = query;
@@ -47,34 +48,49 @@ class Groups_screen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Groups_widgets.customButton(
-                      context,
-                      "my groups".tr,
-                          () {
-                        groupsController.currentGroupListType.value = GroupListType.myGroups;
-                        groupsController.showMyGroups();
-                      },
-                      currentTheme,
+                    // My Groups Button
+                    Expanded(
+                      child: CustomTooltip(
+                        message: "View your groups",
+                        child: CustomElevatedButton(
+                          title: "my groups".tr,
+                          onPressed: () {
+                            groupsController.currentGroupListType.value = GroupListType.myGroups;
+                            groupsController.showMyGroups();
+                          },
+                          color: AppColors.primary(context, currentTheme),
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 2),
-                    Groups_widgets.customButton(
-                      context,
-                      "joined groups".tr,
-                          () {
-                        groupsController.currentGroupListType.value = GroupListType.joinedGroups;
-                        groupsController.showJoinedGroups();
-                      },
-                      currentTheme,
+                    // Joined Groups Button
+                    Expanded(
+                      child: CustomTooltip(
+                        message: "View groups you have joined",
+                        child: CustomElevatedButton(
+                          title: "joined groups".tr,
+                          onPressed: () {
+                            groupsController.currentGroupListType.value = GroupListType.joinedGroups;
+                            groupsController.showJoinedGroups();
+                          },
+                          color: AppColors.primary(context, currentTheme),
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 2),
-                    Groups_widgets.customButton(
-                      context,
-                      "public groups".tr,
-                          () {
-                        groupsController.currentGroupListType.value = GroupListType.publicGroups;
-                        groupsController.showPublicGroups();
-                      },
-                      currentTheme,
+                    // Public Groups Button
+                    Expanded(
+                      child: CustomTooltip(
+                        message: "View available public groups",
+                        child: CustomElevatedButton(
+                          title: "public groups".tr,
+                          onPressed: () {
+                            groupsController.currentGroupListType.value = GroupListType.publicGroups;
+                            groupsController.showPublicGroups();
+                          },
+                          color: AppColors.primary(context, currentTheme),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -101,12 +117,43 @@ class Groups_screen extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final group = currentGroupList[index];
                         bool isAdmin = (currentGroupList.value == groupsController.ownGroups.value || groupsController.currentGroupListType.value == GroupListType.myGroups);
-                        return Groups_widgets.groupListTile(
-                          context,
-                          group,
-                          isAdmin,
-                          groupsController,
-                          currentTheme,
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                          elevation: 4,
+                          color: AppColors.background(context, currentTheme),
+                          child: ListTile(
+                            onTap: () {
+                              if (groupsController.currentGroupListType.value != GroupListType.publicGroups ||
+                                  groupsController.currentGroupList.value == groupsController.notJoinedOtherGroups.value) {
+                                Get.toNamed("/Group", arguments: {'group': group, 'isAdmin': isAdmin});
+                              }
+                            },
+                            leading: Icon(Icons.group, color: AppColors.font(context, currentTheme)),
+                            title: Text(
+                              group.name,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.font(context, currentTheme),
+                              ),
+                            ),
+                            subtitle: Text(
+                              'owner'.tr + ': ${group.owner?.fullname ?? "unknown".tr}',
+                              style: TextStyle(color: AppColors.gray(context, currentTheme)),
+                            ),
+                            trailing: groupsController.currentGroupListType.value == GroupListType.publicGroups ||
+                                groupsController.currentGroupList.value == groupsController.notJoinedOtherGroups.value
+                                ? CustomTooltip(
+                              message: "Send a join request",
+                              child: CustomElevatedButton(
+                                color: AppColors.button(context, currentTheme),
+                                onPressed: () {
+                                  groupsController.sendJoinRequest(group);
+                                },
+                                title: "join request".tr,
+                              ),
+                            )
+                                : null,
+                          ),
                         );
                       },
                     );

@@ -27,8 +27,7 @@ class UserDetailsScreen extends StatelessWidget {
 
     final User user = arguments['user'];
     final UserInFolder member = arguments['member'];
-    final int groupId = arguments['groupId']; // استلام groupId
-
+    final int groupId = arguments['groupId'];
 
     final themeController = Get.find<ThemeController>();
     String currentTheme = themeController.currentTheme.value;
@@ -55,14 +54,17 @@ class UserDetailsScreen extends StatelessWidget {
               children: [
                 Align(
                   alignment: Alignment.topRight,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.report_problem,
-                      color: AppColors.primary(context, currentTheme),
+                  child: Tooltip(
+                    message: "Download Report",
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.report_problem,
+                        color: AppColors.primary(context, currentTheme),
+                      ),
+                      onPressed: () {
+                        downloadReportController.downloadReport(groupId, user.id);
+                      },
                     ),
-                    onPressed: () {
-                      downloadReportController.downloadReport(groupId, user.id);
-                    },
                   ),
                 ),
                 isWeb
@@ -89,36 +91,48 @@ class UserDetailsScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Name: ${user.fullname}",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.font(context, currentTheme),
+                          Tooltip(
+                            message: "User's Full Name",
+                            child: Text(
+                              "Name: ${user.fullname}",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.font(context, currentTheme),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 10),
-                          Text(
-                            "Email: ${user.email}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: AppColors.gray(context, currentTheme),
+                          Tooltip(
+                            message: "User's Email Address",
+                            child: Text(
+                              "Email: ${user.email}",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: AppColors.gray(context, currentTheme),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 10),
-                          Text(
-                            "Role: ${user.role}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: AppColors.gray(context, currentTheme),
+                          Tooltip(
+                            message: "User's Role",
+                            child: Text(
+                              "Role: ${user.role}",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: AppColors.gray(context, currentTheme),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 10),
-                          Text(
-                            "Status: ${member.status}",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: AppColors.gray(context, currentTheme),
+                          Tooltip(
+                            message: "Membership Status",
+                            child: Text(
+                              "Status: ${member.status}",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: AppColors.gray(context, currentTheme),
+                              ),
                             ),
                           ),
                         ],
@@ -141,36 +155,48 @@ class UserDetailsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Text(
-                      "Name: ${user.fullname}",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.font(context, currentTheme),
+                    Tooltip(
+                      message: "User's Full Name",
+                      child: Text(
+                        "Name: ${user.fullname}",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.font(context, currentTheme),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Text(
-                      "Email: ${user.email}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColors.gray(context, currentTheme),
+                    Tooltip(
+                      message: "User's Email Address",
+                      child: Text(
+                        "Email: ${user.email}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.gray(context, currentTheme),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Text(
-                      "Role: ${user.role}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColors.gray(context, currentTheme),
+                    Tooltip(
+                      message: "User's Role",
+                      child: Text(
+                        "Role: ${user.role}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.gray(context, currentTheme),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Text(
-                      "Status: ${member.status}",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColors.gray(context, currentTheme),
+                    Tooltip(
+                      message: "Membership Status",
+                      child: Text(
+                        "Status: ${member.status}",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.gray(context, currentTheme),
+                        ),
                       ),
                     ),
                   ],

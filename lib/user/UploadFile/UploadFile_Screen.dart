@@ -51,14 +51,20 @@ class UploadFile_Screen extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await fileUploadController.selectFile();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.button(context, currentTheme),
+                        child: Tooltip(
+                          message: "Select a file from your device",
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              await fileUploadController.selectFile();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.button(context, currentTheme),
+                            ),
+                            child: Text(
+                              "select_file".tr,
+                              style: TextStyle(color: AppColors.font(context, currentTheme)), // Translated text
+                            ),
                           ),
-                          child: Text("select_file".tr,style: TextStyle(color:AppColors.font(context, currentTheme) ),), // Translated text
                         ),
                       ),
                     ],
@@ -80,34 +86,40 @@ class UploadFile_Screen extends StatelessWidget {
                   ),
                   child: Center(
                     child: Obx(() {
-                      return Text(
-                        fileUploadController.selectedFileName.value.isNotEmpty
-                            ? fileUploadController.selectedFileName.value
-                            : "no_file_selected".tr, // Translated text
-                        style: TextStyle(color: AppColors.font(context, currentTheme)), // Dynamic text color
+                      return Tooltip(
+                        message: "Currently selected file",
+                        child: Text(
+                          fileUploadController.selectedFileName.value.isNotEmpty
+                              ? fileUploadController.selectedFileName.value
+                              : "no_file_selected".tr, // Translated text
+                          style: TextStyle(color: AppColors.font(context, currentTheme)), // Dynamic text color
+                        ),
                       );
                     }),
                   ),
                 ),
               ),
               // Upload Button Section
-              InkWell(
-                onTap: () async {
-                  await fileUploadController.uploadFile(groupId);
-                },
-                child: Column(
-                  children: [
-                    Image.asset(
-                      "assets/UploadFile.png",
-                      height: 100,
-                      width: 100,
-                      color: AppColors.button(context, currentTheme),
-                    ),
-                    Text(
-                      "press_to_upload".tr, // Translated text
-                      style: TextStyle(color: AppColors.font(context, currentTheme)), // Dynamic font color
-                    ),
-                  ],
+              Tooltip(
+                message: "Tap to upload the selected file",
+                child: InkWell(
+                  onTap: () async {
+                    await fileUploadController.uploadFile(groupId);
+                  },
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        "assets/UploadFile.png",
+                        height: 100,
+                        width: 100,
+                        color: AppColors.button(context, currentTheme),
+                      ),
+                      Text(
+                        "press_to_upload".tr, // Translated text
+                        style: TextStyle(color: AppColors.font(context, currentTheme)), // Dynamic font color
+                      ),
+                    ],
+                  ),
                 ),
               ),
               // Uploading Indicator

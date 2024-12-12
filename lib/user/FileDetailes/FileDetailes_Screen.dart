@@ -29,7 +29,7 @@ class FileDetailsScreen extends StatelessWidget {
     final int folderId = file.folderId;
 
     final downloadReportController = Get.put(DownloadFileReportController());
-    MyBookedFilesController _MyBookedFilesController=Get.put(MyBookedFilesController());
+    MyBookedFilesController _MyBookedFilesController = Get.put(MyBookedFilesController());
 
     final themeController = Get.find<ThemeController>();
     String currentTheme = themeController.currentTheme.value;
@@ -54,14 +54,17 @@ class FileDetailsScreen extends StatelessWidget {
               children: [
                 Align(
                   alignment: Alignment.topRight,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.report_problem,
-                      color: AppColors.primary(context, currentTheme),
+                  child: Tooltip(
+                    message: 'Download file report', // Tooltip for the report icon
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.report_problem,
+                        color: AppColors.primary(context, currentTheme),
+                      ),
+                      onPressed: () {
+                        downloadReportController.downloadReportForFile(file.id, folderId);
+                      },
                     ),
-                    onPressed: () {
-                      downloadReportController.downloadReportForFile(file.id, folderId);
-                    },
                   ),
                 ),
                 isWeb
@@ -117,14 +120,16 @@ class FileDetailsScreen extends StatelessWidget {
                             ),
                           ),
                           file.bookedUser == null
-                              ? ElevatedButton(
-                            onPressed: () {
-                              // إضافة عملية Check In
-                              _MyBookedFilesController.fileCheckIn(file.id);
-                            },
-                            child: Text("Check In"),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary(context, currentTheme),
+                              ? Tooltip(
+                            message: 'Check in this file', // Tooltip for Check In button
+                            child: ElevatedButton(
+                              onPressed: () {
+                                _MyBookedFilesController.fileCheckIn(file.id);
+                              },
+                              child: Text("Check In"),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary(context, currentTheme),
+                              ),
                             ),
                           )
                               : Container(),
@@ -177,15 +182,16 @@ class FileDetailsScreen extends StatelessWidget {
                       ),
                     ),
                     file.bookedUser == null
-                        ? ElevatedButton(
-                      onPressed: () {
-                        print("ffffffffffff");
-                        // إضافة عملية Check In
-                        _MyBookedFilesController.fileCheckIn(file.id);
-                      },
-                      child: Text("Check In"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary(context, currentTheme),
+                        ? Tooltip(
+                      message: 'Check in this file', // Tooltip for Check In button
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _MyBookedFilesController.fileCheckIn(file.id);
+                        },
+                        child: Text("Check In"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary(context, currentTheme),
+                        ),
                       ),
                     )
                         : Container(),
