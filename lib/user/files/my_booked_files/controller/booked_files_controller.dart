@@ -17,11 +17,11 @@ class MyBookedFilesController extends GetxController {
 
   @override
   void onInit() {
-    fetchFilesByUser();
+    fetchBookedFilesByUser();
     super.onInit();
   }
 
-  Future<void> fetchFilesByUser() async {
+  Future<void> fetchBookedFilesByUser() async {
     isLoading(true);
     try {
       String? token =await _sharedPreferencesService.getToken();
@@ -58,37 +58,6 @@ class MyBookedFilesController extends GetxController {
     }
   }
 
-  Future<void> fetchFilesByFolder() async {
-    isLoading(true);
-    try {
-      String? token =await _sharedPreferencesService.getToken();
-
-      var headers = {
-        'Accept': '*/*',
-        'Authorization': 'Bearer $token',
-      };
-
-      var response = await http.get(
-        Uri.parse('http://195.88.87.77:8888/api/v1/files/folder/${2}'),
-        headers: headers,
-      );
-
-      if (response.statusCode == 200) {
-        List jsonResponse = json.decode(response.body);
-        print(jsonResponse.toString());
-        filesOfFolder.value =
-            jsonResponse.map((file) => FileModel.fromJson(file)).toList();
-      } else {
-        Get.snackbar('Error',
-            'Failed to load groups. Status code: ${response.statusCode}');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Failed to load groups: $e');
-    } finally {
-      isLoading(false);
-    }
-  }
-
 
   Future<void> fileCheckIn(int fileId) async {
     String? token =await _sharedPreferencesService.getToken();
@@ -113,5 +82,6 @@ class MyBookedFilesController extends GetxController {
       print(response.reasonPhrase);
     }
   }
+
 
 }

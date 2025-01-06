@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 class Groups {
   final int id;
   final String name;
@@ -110,6 +112,7 @@ class File {
   final String status;
   final User? bookedUser;
   final int folderId;
+  bool isSelected = false;
 
   File({
     required this.id,

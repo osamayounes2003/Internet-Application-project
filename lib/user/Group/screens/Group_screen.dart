@@ -1,3 +1,4 @@
+import 'package:file_manager_internet_applications_project/user/Group/multi_select_file/multi_select_item_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../CustomComponent/BaseScreen.dart';
@@ -252,7 +253,10 @@ class FilesTab extends StatelessWidget {
       children: [
         CustomElevatedButton(
           title: "Check in more than one file",
-          onPressed: () {},
+          onPressed: () {
+            //TODO multi select
+        Get.to(SelectMultiFileScreen(files: uploadedFiles));
+          },
           color: AppColors.button(context, currentTheme),
         ),
         Expanded(

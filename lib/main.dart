@@ -1,7 +1,7 @@
-import 'package:file_manager_internet_applications_project/splash/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'Auth/refresh_token/refresh_token_controller.dart';
 import 'Loclaization/translations.dart';
 import 'Notifications/FireBase_Services.dart';
@@ -9,7 +9,6 @@ import 'Notifications/Notifications_Services.dart';
 import 'Routes/app_routes.dart';
 import 'SharedPreferences/shared_preferences_service.dart';
 import 'Theme/ThemeController.dart';
-import 'user/HomeUser/HomeUser_Screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

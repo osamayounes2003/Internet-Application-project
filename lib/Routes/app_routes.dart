@@ -10,6 +10,7 @@ import '../Admin/AllUser_Show/allUser_Screen.dart';
 import '../user/FileDetailes/FileDetailes_Screen.dart';
 import '../user/UpdateGroupInfo/UpdateGroupInfo_Screen.dart';
 import '../user/files/booked_files_by_folder/screen/booked_files_by_folder_screen.dart';
+import '../user/files/booked_files_by_folder/screen/file_details_screen.dart';
 import '../user/files/my_booked_files/screen/booked_files_screen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import '../Admin/HomeAdmin/HomeAdmin_Screen.dart';
@@ -56,13 +57,15 @@ class AppRoutes {
   static const String groupDetailAdmin = '/groupdetailes_admin';
   static const String ALLUsersScreen = '/AdminUsersScreen';
   static const String ALLFilesScreen = '/allfiles_admin';
-
+  static const String uploadToCheckOut = '/upload_to_check_out';
+  static const String fileDetailsScreen = '/files_details_screen';
   static List<GetPage> routes = [
     GetPage(name: login, page: () => LogIn_Screen()),
     GetPage(name: signup, page: () => SignUp_Screen()),
     GetPage(name: newPassword, page: () => NewPassword_Screen(emailAddress: "")),
     GetPage(name: upload, page: () => UploadFile_Screen()),
     GetPage(name: homeUser, page: () => HomeUser_Screen()),
+
     GetPage(name: otp, page: () => OTP_Screen(nextRoute: '',emailAddress: " ",)),
     GetPage(name: profile, page: () => Profile()),
     GetPage(name: resetPasswordScreen, page: () => ResetPasswordScreen()),
@@ -86,4 +89,5 @@ class AppRoutes {
     GetPage(name: ALLUsersScreen, page:()=> AdminUsersScreen()),
     GetPage(name: ALLFilesScreen, page:()=> AllFilesScreen()),
   ];
+
 }

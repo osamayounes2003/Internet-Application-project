@@ -27,7 +27,7 @@ class GridItem extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
-          Get.toNamed(route);
+          Get.offNamed(route);
         },
         child: Padding(
           padding: const EdgeInsets.all(20.0),

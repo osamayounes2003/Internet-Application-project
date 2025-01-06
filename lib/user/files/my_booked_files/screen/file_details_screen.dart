@@ -1,74 +1,71 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../CustomComponent/CustomButton.dart';
 import '../../../UploadFile/UploadFile_Model.dart';
+import '../../check_out_file/controller/check_out_controller.dart';
 import '../controller/booked_files_controller.dart';
 import '../widgets/detail_row.dart';
 
 class FileDetailScreen extends StatelessWidget {
   final FileModel file;
 
-  FileDetailScreen({required this.file});
-
+  FileDetailScreen({Key? key, required this.file}) : super(key: key);
+  final CheckoutController checkoutController = Get.put(CheckoutController());
   @override
   Widget build(BuildContext context) {
-    final MyBookedFilesController myBookedFilesController =
-    Get.put(MyBookedFilesController());
 
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text(file.name ?? 'File Details'), // Fallback title
+        title: Text(file.name),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
         child: ListView(
           children: [
             Card(
               elevation: 4,
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(screenWidth * 0.04), // Responsive padding
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     DetailRow(label: 'Name:', value: file.name ?? 'Unknown'),
-                    DetailRow(label: 'URL:', value: file.url ?? 'No URL'),
                     DetailRow(
                       label: 'Status:',
                       value: file.status == 'UNAVAILABLE'
                           ? '!${file.status}'
                           : 'AVAILABLE',
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height: screenWidth * 0.04), // Responsive spacing
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Tooltip(
-                          message: 'Click Check Out File', // Tooltip for Check Out button
+                          message: 'Click Check Out File',
                           child: CustomElevatedButton(
                             title: 'Check Out',
                             onPressed: () {
-                              // Handle Check Out action
+                              checkoutController.showCheckoutDialog(file.id);
                             },
                           ),
                         ),
+
                         Tooltip(
-                          message: 'Click Report File', // Tooltip for Report button
+                          message: 'Click Download File',
                           child: CustomElevatedButton(
-                            title: 'Report',
-                            onPressed: () {
-                              // Handle Report action
-                            },
-                          ),
-                        ),
-                        Tooltip(
-                          message: 'Click Edit File', // Tooltip for Edit button
-                          child: CustomElevatedButton(
-                            title: 'Edit',
-                            onPressed: () {
-                              // Handle Edit action
+                            title: 'Download',
+                            onPressed: () async {
+                              final url = file.url;
+                              if (url != null && await canLaunch(url)) {
+                                await launch(url, forceSafariVC: false, forceWebView: false);
+                              } else {
+                                // Handle the error if the URL can't be launched
+                                Get.snackbar('Error', 'Could not launch $url');
+                              }
                             },
                           ),
                         ),
@@ -84,23 +81,4 @@ class FileDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: RichText(
-        text: TextSpan(
-          text: '$label ',
-          style: TextStyle(
-              fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black),
-          children: <TextSpan>[
-            TextSpan(
-              text: value,
-              style: TextStyle(
-                  fontWeight: FontWeight.normal, color: Colors.black54),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

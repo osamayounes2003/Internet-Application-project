@@ -57,6 +57,10 @@ class SharedPreferencesService {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('role', role);
   }
+  Future<void> saveUserToken(String token) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('token', token);
+  }
 
   Future<int?> getUserId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

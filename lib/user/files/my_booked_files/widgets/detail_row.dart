@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../../color_.dart';
 
 class DetailRow extends StatelessWidget {
@@ -14,31 +13,40 @@ class DetailRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get screen width
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    // Define responsive font sizes
+    double labelFontSize = screenWidth < 600 ? 16 : 20; // Smaller font for small screens
+    double valueFontSize = screenWidth < 600 ? 14 : 15;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Text(
-                label,
-                style: TextStyle(fontSize: 20),
-              ),
-              Spacer(),
-              Text(
-                value,
-                style: TextStyle(fontSize: 15),
-              ),
-            ],
-          ),
-           SizedBox(
-            height: 10,
-            child: Divider(
-              thickness: 3,
-              color:color_.greydark ,
+      padding: EdgeInsets.symmetric(vertical: screenWidth * 0.01), // Responsive vertical padding
+      child: Container(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(fontSize: labelFontSize),
+                ),
+                Spacer(),
+                Text(
+                  value,
+                  style: TextStyle(fontSize: valueFontSize),
+                ),
+              ],
             ),
-          ),
-        ],
+            SizedBox(
+              height: 10,
+              child: Divider(
+                thickness: 3,
+                color: color_.greydark,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

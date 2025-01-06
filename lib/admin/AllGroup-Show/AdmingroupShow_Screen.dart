@@ -199,7 +199,7 @@ class MembersListView extends StatelessWidget {
 
 class FilesListView extends StatelessWidget {
   final List<File> files;
-  const FilesListView({super.key, required this.files});
+  FilesListView({super.key, required this.files});
 
   @override
   Widget build(BuildContext context) {

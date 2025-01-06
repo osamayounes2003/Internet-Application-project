@@ -38,6 +38,7 @@ refreshToken();
         var data = json.decode(response.body);
         print("osama makes refresh token : $data");
        _sharedPreferencesService.saveRefreshToken(data['refreshToken']);
+       _sharedPreferencesService.saveUserToken(data['token']);
        var refreshToken= await _sharedPreferencesService.getRefreshToken() ;
        print("refreshToken : $refreshToken");
       } else {
