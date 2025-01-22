@@ -10,6 +10,27 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
+
+      # Checkout the repository
+      - uses: actions/checkout@v4
+
+      # Set up Flutter
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.24.5 # Use the Flutter stable version
+
+      # Install Flutter dependencies
+      - name: Install Dependencies
+        run: flutter pub get
+
+      # Build Flutter web app
+      - name: Build Flutter Web
+        run: flutter build web
+
+      - name: Copy Build Files to Public
+        run: cp -r build/web/* public/
+
       - uses: actions/checkout@v4
       - run: npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
