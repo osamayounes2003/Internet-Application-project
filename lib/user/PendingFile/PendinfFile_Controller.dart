@@ -146,7 +146,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../../Admin/AllFiles_show/file_page_model.dart';
+import '../../admin/AllFiles_show/file_page_model.dart';
 import '../../SharedPreferences/shared_preferences_service.dart';
 
 class PendingFileController extends GetxController {
