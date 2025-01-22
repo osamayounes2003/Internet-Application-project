@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "filemanager-446f0"
-  }
+    "default": "internet-application-project",
+    "production": "internet-application-project"
+  },
+  "targets": {},
+  "etags": {}
 }
