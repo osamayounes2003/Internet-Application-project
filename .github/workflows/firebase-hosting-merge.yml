@@ -28,6 +28,9 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web
 
+      - name: Create public directory
+        run: mkdir -p public
+
       - name: Copy Build Files to Public
         run: cp -r build/web/* public/
 
