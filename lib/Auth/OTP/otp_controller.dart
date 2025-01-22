@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'package:file_manager_internet_applications_project/Auth/ResetPassword/NewPassword_Screen.dart';
+import 'package:file_manager_internet_applications_project/Auth/ResetPassword/new_password_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'OTP_Model.dart';
+import 'otp_model.dart';
 
 class OtpController extends GetxController {
   var isLoading = false.obs;

@@ -11,14 +11,14 @@ import '../../user/Groups/models/Groups_Model.dart';
 import '../../user/Reports/UserReports_Controller.dart';
 import 'AllGroupShow_controller.dart';
 
-class AdminGroupShow_screen extends StatefulWidget {
-  const AdminGroupShow_screen({Key? key}) : super(key: key);
+class AdminGroupShowScreen extends StatefulWidget {
+  const AdminGroupShowScreen({Key? key}) : super(key: key);
 
   @override
   _GroupScreenState createState() => _GroupScreenState();
 }
 
-class _GroupScreenState extends State<AdminGroupShow_screen> with SingleTickerProviderStateMixin {
+class _GroupScreenState extends State<AdminGroupShowScreen> with SingleTickerProviderStateMixin {
   Groups? group;
   String currentView = 'Members';
   List<String> members = [];

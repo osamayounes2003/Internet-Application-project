@@ -1,27 +1,14 @@
+import 'package:file_manager_internet_applications_project/Auth/ResetPassword/reset_password_controller.dart';
+import 'package:file_manager_internet_applications_project/CustomComponent/CustomButton.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../CustomComponent/CustomButton.dart';
-import '../../CustomComponent/customOTP.dart';
-import 'OTP_Controller.dart';
+import '../../CustomComponent/CustomInput.dart';
 
-class OTP_Screen extends StatefulWidget {
-  final String nextRoute;
-  final String emailAddress;
+class ResetPasswordScreen extends StatelessWidget {
+  final ResetPassword_Controller controller = Get.put(ResetPassword_Controller());
 
-  OTP_Screen({required this.nextRoute, required this.emailAddress});
-
-  @override
-  State<OTP_Screen> createState() => _OTP_ScreenState();
-}
-
-class _OTP_ScreenState extends State<OTP_Screen> {
   @override
   Widget build(BuildContext context) {
-    final OtpController controller = Get.put(OtpController(
-      nextRoute: widget.nextRoute,
-      emailAddress: widget.emailAddress,
-    ));
-
     double screenWidth = MediaQuery.of(context).size.width;
     bool isWeb = screenWidth > 600;
 
@@ -30,7 +17,7 @@ class _OTP_ScreenState extends State<OTP_Screen> {
         decoration: isWeb
             ? BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.grey.shade800,Colors.black, ],
+            colors: [Colors.grey.shade800,Colors.black],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -38,7 +25,7 @@ class _OTP_ScreenState extends State<OTP_Screen> {
             : BoxDecoration(color: Colors.white),
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 100),
             child: Container(
               width: isWeb ? 400 : double.infinity,
               padding: EdgeInsets.all(20),
@@ -57,52 +44,49 @@ class _OTP_ScreenState extends State<OTP_Screen> {
               )
                   : null,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    "assets/OTP.png",
+                    "assets/Resetpassword.png",
                     height: 150,
                     width: 150,
+                    fit: BoxFit.cover,
                   ),
+                  SizedBox(height: 50),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 30.0),
                     child: Text(
-                      "Verification",
+                      "Reset Password",
                       style: TextStyle(fontSize: 30),
                     ),
                   ),
-                  Text(
-                    'Please enter the code sent to your email',
-                    style: TextStyle(fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: List.generate(6, (index) {
-                      return buildOtpField(index, controller, context);
-                    }),
-                  ),
-                  SizedBox(height: 30),
                   Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Text(
+                      'Enter the email associated with your account and we will send an email with a verification code to reset your password',
+                      style: TextStyle(fontSize: 18, color: Colors.grey),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  CustomTextFormField(
+                    controller: controller.emailController,
+                    labelText: 'Email',
+                    keyboardType: TextInputType.emailAddress,
+                    suffixIcon: const Icon(Icons.email, color: Colors.black),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 30.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         CustomElevatedButton(
-                          title: 'Verify',
+                          title: "Send Verification Code",
                           onPressed: () {
-                            controller.verifyOtp();
+                            controller.sendVerificationCode();
                           },
-                          isLoading: controller.isLoading.value,
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Obx(() => controller.isLoading.value
-                      ? CircularProgressIndicator()
-                      : Container()),
                 ],
               ),
             ),

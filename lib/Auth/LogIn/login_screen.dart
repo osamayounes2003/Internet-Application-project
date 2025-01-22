@@ -1,4 +1,4 @@
-import 'package:file_manager_internet_applications_project/Auth/LogIn/LogIn_Controller.dart';
+import 'package:file_manager_internet_applications_project/Auth/LogIn/logIn_controller.dart';
 import 'package:file_manager_internet_applications_project/color_.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,8 +6,8 @@ import 'package:get/get.dart';
 import '../../CustomComponent/CustomButton.dart';
 import '../../CustomComponent/CustomInput.dart';
 
-class LogIn_Screen extends StatelessWidget {
-  LogIn_Screen({super.key});
+class LoginScreen extends StatelessWidget {
+  LoginScreen({super.key});
   final LogIn_Controller controller = Get.put(LogIn_Controller());
 
   @override

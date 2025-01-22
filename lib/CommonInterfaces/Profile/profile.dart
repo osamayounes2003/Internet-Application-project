@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../../CustomComponent/BaseScreen.dart';
 import '../../Theme/ThemeController.dart';
 import '../../color_.dart';
-import 'ProfileControlller.dart';
+import 'profile_controlller.dart';
 
 class Profile extends StatelessWidget {
   final ProfileController profileController = Get.put(ProfileController());

@@ -1,14 +1,25 @@
-import 'package:file_manager_internet_applications_project/Auth/ResetPassword/ResetPassword_Controller.dart';
 import 'package:file_manager_internet_applications_project/CustomComponent/CustomButton.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../CustomComponent/CustomInput.dart';
+import 'new_password_controller.dart';
 
-class ResetPasswordScreen extends StatelessWidget {
-  final ResetPassword_Controller controller = Get.put(ResetPassword_Controller());
+class NewPassword_Screen extends StatefulWidget {
+  final String emailAddress;
+
+  NewPassword_Screen({super.key, required this.emailAddress});
 
   @override
+  State<NewPassword_Screen> createState() => _NewPassword_ScreenState();
+}
+
+class _NewPassword_ScreenState extends State<NewPassword_Screen> {
+  @override
   Widget build(BuildContext context) {
+    final NewPassword_Controller controller = Get.put(NewPassword_Controller(
+      emailAddress: widget.emailAddress,
+    ));
+
     double screenWidth = MediaQuery.of(context).size.width;
     bool isWeb = screenWidth > 600;
 
@@ -17,7 +28,7 @@ class ResetPasswordScreen extends StatelessWidget {
         decoration: isWeb
             ? BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.grey.shade800,Colors.black],
+            colors: [Colors.grey.shade800,Colors.black, ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -25,7 +36,7 @@ class ResetPasswordScreen extends StatelessWidget {
             : BoxDecoration(color: Colors.white),
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 100),
+            padding: const EdgeInsets.symmetric(vertical: 100, horizontal: 20),
             child: Container(
               width: isWeb ? 400 : double.infinity,
               padding: EdgeInsets.all(20),
@@ -55,23 +66,43 @@ class ResetPasswordScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 30.0),
                     child: Text(
-                      "Reset Password",
-                      style: TextStyle(fontSize: 30),
+                      "Create new Password",
+                      style: TextStyle(
+                        fontSize: 30,
+                      ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Text(
-                      'Enter the email associated with your account and we will send an email with a verification code to reset your password',
+                      'Your new password must be different from the previously used password',
                       style: TextStyle(fontSize: 18, color: Colors.grey),
                       textAlign: TextAlign.center,
                     ),
                   ),
                   CustomTextFormField(
-                    controller: controller.emailController,
-                    labelText: 'Email',
-                    keyboardType: TextInputType.emailAddress,
-                    suffixIcon: const Icon(Icons.email, color: Colors.black),
+                    controller: controller.passwordController,
+                    labelText: 'Password',
+                    isObscure: !controller.isPasswordVisible.value,
+                    suffixIcon: Icon(
+                      controller.isPasswordVisible.value
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Colors.black,
+                    ),
+                    onSuffixIconPressed: controller.togglePasswordVisibility,
+                  ),
+                  CustomTextFormField(
+                    controller: controller.confirmPasswordController,
+                    labelText: 'Confirm Password',
+                    isObscure: !controller.isPasswordVisible.value,
+                    suffixIcon: Icon(
+                      controller.isPasswordVisible.value
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Colors.black,
+                    ),
+                    onSuffixIconPressed: controller.togglePasswordVisibility,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 30.0),
@@ -79,9 +110,9 @@ class ResetPasswordScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         CustomElevatedButton(
-                          title: "Send Verification Code",
+                          title: 'Reset',
                           onPressed: () {
-                            controller.sendVerificationCode();
+                            controller.resetPassword();
                           },
                         ),
                       ],

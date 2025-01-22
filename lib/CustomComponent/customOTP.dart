@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../Auth/OTP/OTP_Controller.dart';
+import '../Auth/OTP/otp_controller.dart';
 
 Widget buildOtpField(int index, OtpController controller, BuildContext context) {
   return SizedBox(

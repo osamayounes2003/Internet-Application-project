@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert'; // لتحويل البيانات
 
-import '../OTP/OTP_Screen.dart';
+import '../OTP/otp_screen.dart';
 
 class ResetPassword_Controller extends GetxController {
   var emailController = TextEditingController();

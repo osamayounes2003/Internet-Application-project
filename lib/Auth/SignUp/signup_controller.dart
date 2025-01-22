@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart'as http;
 
-import '../OTP/OTP_Screen.dart';
-import 'SignUp_Model.dart';
+import '../OTP/otp_screen.dart';
+import 'signup_model.dart';
 
 class SignUp_Controller extends GetxController {
 

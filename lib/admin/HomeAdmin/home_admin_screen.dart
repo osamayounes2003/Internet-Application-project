@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../CommonInterfaces/Profile/ProfileControlller.dart';
+import '../../CommonInterfaces/Profile/profile_controlller.dart';
 import '../../CustomComponent/BaseScreen.dart';
 import '../../color_.dart';
 import '../../Theme/ThemeController.dart';
-import '../ReportAdmin/ReportAdmin_controller.dart';
+import '../ReportAdmin/report_admin_controller.dart';
 
-class HomeAdmin_Screen extends StatelessWidget {
+class HomeAdminScreen extends StatelessWidget {
   final ProfileController profileController = Get.put(ProfileController());
   final DownloadAdminReportController downloadController = Get.put(DownloadAdminReportController());
 
-  HomeAdmin_Screen({super.key});
+  HomeAdminScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

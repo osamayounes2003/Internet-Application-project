@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../Notifications/FireBase_Services.dart';
 import '../../SharedPreferences/shared_preferences_service.dart';
-import 'LogInModel.dart';
+import 'login_model.dart';
 
 class LogIn_Controller extends GetxController {
 

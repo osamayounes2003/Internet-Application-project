@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:file_manager_internet_applications_project/Loclaization/en.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import '../../Admin/FileTracing/FileTracing_Model.dart';
+import '../../Admin/FileTracing/file_tracing_model.dart';
 import '../../Admin/FileTracing/FileTracing_Screen.dart';
 import '../../SharedPreferences/shared_preferences_service.dart';
 import 'FileTracingRequest_Model.dart';
