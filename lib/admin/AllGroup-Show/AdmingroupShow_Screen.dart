@@ -1,9 +1,11 @@
+import 'package:file_manager_internet_applications_project/core/extensions/widget_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../CustomComponent/BaseScreen.dart';
 import '../../../CustomComponent/CustomButton.dart';
 import '../../../Theme/ThemeController.dart';
 import '../../../color_.dart';
+import '../../user/Group/multi_select_file/multi_select_item_controller.dart';
 import '../../user/Group/screens/Group_screen.dart';
 import '../../user/Groups/models/Groups_Model.dart';
 import '../../user/Reports/UserReports_Controller.dart';
@@ -203,13 +205,45 @@ class FilesListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: files.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(files[index].name),
-        );
-      },
-    );
+    final themeController = Get.find<ThemeController>();
+    String currentTheme = themeController.currentTheme.value;
+    files.sort((a, b) {
+      return a.status.compareTo(b.status);
+    });
+    return
+      files.isNotEmpty ?
+        Column(
+          children: [
+            ListView.separated(
+              itemCount: files.length,
+              itemBuilder: (context, index) {
+                final file = files[index];
+                return Card(
+                  child: ListTile(
+                    onTap: () {
+                      Get.toNamed(
+                        '/File_Details',
+                        arguments: {
+                          'file': files[index],
+                        },
+                      );
+                    },
+                    title:   Text(file.name),
+                    subtitle: Row(
+                      children: [
+                        Text('Status: ${file.status}'),
+                        Text('  Booked by: ${file.bookedUser?.fullname}'),
+                      ],
+                    ),
+                    leading: file.status == "AVAILABLE"
+                        ? Icon(Icons.event_available , color: Colors.green,)
+                        : Icon(Icons.cancel_presentation , color: Colors.red,),
+                  ),
+                );
+              }, separatorBuilder: (BuildContext context, int index) { return SizedBox(height: 5,); },
+            ).expanded(flex: 1),
+          ],
+        ): Container();
   }
+  //sdfa
 }
