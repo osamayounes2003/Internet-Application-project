@@ -30,7 +30,8 @@ class Groups {
       listOfFiles: json['files'] != null
           ? List<File>.from(
           (json['files'] as List)
-              .map((file) => File.fromJson(file)))
+              .map((file) => File.fromJson(file))
+              .where((file) => file.status != "PENDING"))
           : [],
       settings: json['settings'] != null
           ? List<String>.from(json['settings'])

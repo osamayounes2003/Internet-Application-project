@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:file_picker/file_picker.dart';
+import '../Groups/controllers/Groups_Controller.dart';
 import 'UploadFile_Model.dart';
 import 'UploadFile_Services.dart';
 
@@ -30,7 +31,17 @@ class FileUploadController extends GetxController {
         FileModel? uploadedFile;
           uploadedFile = await fileUploadService.uploadFileBytes(selectedFileBytes, selectedFileName.value, groupId);
         if (uploadedFile != null) {
+          Get.reload<GroupsController>();
+          Get.offAllNamed('/Group');
           Get.snackbar('Success', 'File uploaded successfully: ${uploadedFile.name}', snackPosition: SnackPosition.BOTTOM);
+          // final GroupsController groupsController = Get.put(GroupsController());
+          // await groupsController.fetchGroups();
+          //  groupsController.currentGroupList.refresh();
+          //  groupsController.groups.refresh();
+          //  groupsController.ownGroups.refresh();
+          //  groupsController.joinedOtherGroups.refresh();
+          //  groupsController.otherGroups.refresh();
+          //  groupsController.notJoinedOtherGroups.refresh();
         }
       } catch (e) {
         Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);

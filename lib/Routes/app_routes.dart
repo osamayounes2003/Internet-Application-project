@@ -8,9 +8,10 @@ import '../Admin/AllGroup-Show/AdminGroupShow_Screen.dart';
 import '../Admin/AllGroup-Show/AllGroupShow_Screen.dart';
 import '../Admin/AllUser_Show/allUser_Screen.dart';
 import '../user/FileDetailes/FileDetailes_Screen.dart';
+import '../user/PendingFile/PendingFile_Screen.dart';
 import '../user/UpdateGroupInfo/UpdateGroupInfo_Screen.dart';
-import '../user/files/booked_files_by_folder/screen/booked_files_by_folder_screen.dart';
-import '../user/files/booked_files_by_folder/screen/file_details_screen.dart';
+// import '../user/files/booked_files_by_folder/screen/booked_files_by_folder_screen.dart';
+// import '../user/files/booked_files_by_folder/screen/file_details_screen.dart';
 import '../user/files/my_booked_files/screen/booked_files_screen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import '../Admin/HomeAdmin/HomeAdmin_Screen.dart';
@@ -59,6 +60,8 @@ class AppRoutes {
   static const String ALLFilesScreen = '/allfiles_admin';
   static const String uploadToCheckOut = '/upload_to_check_out';
   static const String fileDetailsScreen = '/files_details_screen';
+  static const String PendingFileScreen = '/PendingFile';
+
   static List<GetPage> routes = [
     GetPage(name: login, page: () => LogIn_Screen()),
     GetPage(name: signup, page: () => SignUp_Screen()),
@@ -77,7 +80,7 @@ class AppRoutes {
     GetPage(name: JoiningRequests, page: () => JoiningRequests_screen()),
     GetPage(name: JoiningRequests_toMyGroups, page: () => JoiningRequestUsers_screen()),
     GetPage(name: myBookedFiles, page: () => MyBookedFiles()),
-    GetPage(name: bookedFilesByFolder, page: () => BookedFilesByFolderScreen()),
+    // GetPage(name: bookedFilesByFolder, page: () => BookedFilesByFolderScreen()),
     GetPage(name: changeTheme, page: () => ChangethemeScreen()),
     GetPage(name: RemoveUser, page: () => RemoveUser_screen()),
     GetPage(name: UpdateGroup, page: () => UpdateGroupInfo_Screen()),
@@ -88,6 +91,7 @@ class AppRoutes {
     GetPage(name: groupDetailAdmin, page:()=> AdminGroupShow_screen()),
     GetPage(name: ALLUsersScreen, page:()=> AdminUsersScreen()),
     GetPage(name: ALLFilesScreen, page:()=> AllFilesScreen()),
+    GetPage(name: PendingFileScreen, page:()=> PendingFile()),
   ];
 
 }

@@ -1,4 +1,4 @@
-class FileModel {
+class ApiResponse {
   final List<Content> content;
   final Pageable pageable;
   final int totalPages;
@@ -10,10 +10,8 @@ class FileModel {
   final int numberOfElements;
   final bool first;
   final bool empty;
-  final BookedUser bookedUser;
 
-  FileModel({
-    required this.bookedUser,
+  ApiResponse({
     required this.content,
     required this.pageable,
     required this.totalPages,
@@ -27,12 +25,10 @@ class FileModel {
     required this.empty,
   });
 
-  factory FileModel.fromJson(Map<String, dynamic> json) {
-    return FileModel(
-      bookedUser: BookedUser.fromJson(json['bookedUser']),
-      content: (json['content'] as List)
-          .map((item) => Content.fromJson(item))
-          .toList(),
+  factory ApiResponse.fromJson(Map<String, dynamic> json) {
+    return ApiResponse(
+      content:
+      (json['content'] as List).map((item) => Content.fromJson(item)).toList(),
       pageable: Pageable.fromJson(json['pageable']),
       totalPages: json['totalPages'],
       totalElements: json['totalElements'],

@@ -17,6 +17,8 @@ class GroupsController extends GetxController {
   final SharedPreferencesService _sharedPreferencesService = SharedPreferencesService();
   var currentGroupListType = GroupListType.all.obs;
 
+  //PENDING
+  //
 
   @override
   void onInit() {
@@ -80,26 +82,20 @@ class GroupsController extends GetxController {
 
       if (response.statusCode == 200) {
         List jsonResponse = json.decode(response.body);
-        groups.value = jsonResponse.map((group) {
-          List<UserInFolder> filteredUsers = group['usersInFolder'] != null
-              ? List<UserInFolder>.from(
-            group['usersInFolder']
-                .map((user) => UserInFolder.fromJson(user))
-                .where((userInFolder) => userInFolder.status == "ACCEPTED"),
-          )
-              : [];
+        groups.value = jsonResponse.map((groupJson) {
 
-          return Groups.fromJson({
-            ...group,
-            'usersInFolder': filteredUsers,
-          });
+          Groups group = Groups.fromJson(groupJson);
+          group.listOfUsers.retainWhere((userInFolder) => userInFolder.status == "ACCEPTED");
+          return group;
         }).toList();
 
       } else {
+        print("error .................................................................${response.statusCode} ${response.reasonPhrase} ");
         Get.snackbar('Error', 'Failed to load groups. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to load groups: $e');
+      print("3.................................................................${e}");
+    Get.snackbar('Error', 'Failed to load groups: $e');
     } finally {
       isLoading(false);
     }
@@ -138,9 +134,11 @@ class GroupsController extends GetxController {
         }).toList();
 
       } else {
+        print("error .................................................................${response.statusCode} ${response.reasonPhrase} ");
         Get.snackbar('Error', 'Failed to load own groups. Status code: ${response.statusCode}');
       }
     } catch (e) {
+      print("2.................................................................${e}");
       Get.snackbar('Error', 'Failed to load own groups: $e');
     } finally {
       isLoading(false);
@@ -195,9 +193,11 @@ class GroupsController extends GetxController {
         notJoinedOtherGroups.value = notJoinedGroups;
 
       } else {
+        print("error .................................................................${response.statusCode} ${response.reasonPhrase} ");
         Get.snackbar('Error', 'Failed to load other groups. Status code: ${response.statusCode}');
       }
     } catch (e) {
+      print("1.................................................................${e}");
       Get.snackbar('Error', 'Failed to load other groups: $e');
     } finally {
       isLoading(false);
@@ -246,8 +246,8 @@ class GroupsController extends GetxController {
         // List jsonResponse = json.decode(responseBody);
         Get.snackbar('successful', 'Request sent to join ${group.name}');
       } else {
-        print(".................................................................${response.statusCode} ${response.reasonPhrase} ");
-        Get.snackbar('Error', 'Failed to load join requests: ${response.reasonPhrase}');
+        print("error .................................................................${response.statusCode} ${response.reasonPhrase} ");
+        Get.snackbar('Error', 'already send reguest: ${response.reasonPhrase}');
       }
     } catch (e) {
       print(".................................................................${e}");

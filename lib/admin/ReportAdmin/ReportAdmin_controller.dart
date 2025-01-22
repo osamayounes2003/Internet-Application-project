@@ -11,6 +11,20 @@ class DownloadAdminReportController extends GetxController {
   final SharedPreferencesService _sharedPreferencesService = SharedPreferencesService();
 
 
+  String extractFileName(String? contentDisposition) {
+    if (contentDisposition == null || !contentDisposition.contains('filename=')) {
+      print('no header');
+      return 'report.csv';
+    }
+    try {
+      final filenamePart = contentDisposition.split('filename=')[1];
+      final filename = filenamePart.split(';')[0].replaceAll('"', '').trim();
+      return filename.isNotEmpty ? filename : 'report.csv';
+    } catch (e) {
+      return 'report.csv';
+    }
+  }
+
   Future<void> downloadAdminReport() async {
     isLoading.value = true;
     String? token = await _sharedPreferencesService.getToken();
@@ -20,8 +34,9 @@ class DownloadAdminReportController extends GetxController {
       isLoading(false);
       return;
     }
+
     var headers = {
-      'Authorization': 'Bearer $token'
+      'Authorization': 'Bearer $token',
     };
 
     var request = http.Request('GET', Uri.parse('http://195.88.87.77:8888/api/v1/reports/all'));
@@ -33,12 +48,9 @@ class DownloadAdminReportController extends GetxController {
       if (response.statusCode == 200) {
         final Uint8List bytes = await response.stream.toBytes();
 
-        String filename = response.headers['content-disposition'] ?? 'report.csv';
-        if (filename.contains('filename=')) {
-          filename = filename.split('filename=')[1].replaceAll('"', '');
-        } else {
-          filename = 'report.csv';
-        }
+        String? contentDisposition = response.headers['content-type'] ;
+        print(contentDisposition);
+        String filename = extractFileName(contentDisposition);
 
         final blob = html.Blob([bytes]);
         final url = html.Url.createObjectUrlFromBlob(blob);
@@ -57,5 +69,4 @@ class DownloadAdminReportController extends GetxController {
     } finally {
       isLoading.value = false;
     }
-  }
-}
+  }}

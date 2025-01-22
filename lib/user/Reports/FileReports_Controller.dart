@@ -32,6 +32,9 @@ class DownloadFileReportController extends GetxController {
     try {
       http.StreamedResponse response = await request.send();
 
+      print("donlwad file ${response.statusCode}");
+      print(folderId);
+      print(fileId);
       if (response.statusCode == 200) {
         final Uint8List bytes = await response.stream.toBytes();
 

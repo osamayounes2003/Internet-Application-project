@@ -79,7 +79,7 @@ class CheckoutController extends GetxController {
     http.StreamedResponse response = await request.send();
     log(response.statusCode.toString());
     if (response.statusCode == 200 || response.statusCode == 201) {
-      Get.offNamed(AppRoutes.uploadToCheckOut);
+      Get.offNamed(AppRoutes.homeUser);
       log("Update file successfully");
     } else {
       log("Error: ${response.reasonPhrase}");

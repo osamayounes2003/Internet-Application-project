@@ -61,7 +61,7 @@ class InvitationController extends GetxController {
         'Accept': '*/*',
         'Authorization': 'Bearer $token',
       };
-      var request = http.Request('PUT', Uri.parse('http://195.88.87.77:8888/api/v1/joins/accept/$invitationId'));
+      var request = http.Request('PUT', Uri.parse('http://195.88.87.77:8888/api/v1/joins/accept?id=$invitationId'));
 
       request.headers.addAll(headers);
 
@@ -69,7 +69,8 @@ class InvitationController extends GetxController {
 print(invitationId);
 print(folderId);
 print(token);
-      if (response.statusCode == 204) {
+print("accept : ${response.statusCode}");
+      if (response.statusCode == 200) {
         print(await response.stream.bytesToString());
         fetchInvitations();
 
@@ -108,7 +109,11 @@ print(token);
 
       http.StreamedResponse response = await request.send();
 
-      if (response.statusCode == 204) {
+      print(invitationId);
+      print(token);
+      print("accept : ${response.statusCode}");
+
+      if (response.statusCode == 204 || response.statusCode==200) {
         fetchInvitations();
         Get.snackbar("Success", "Successfully rejected the invitation",colorText:color_.white);
       } else {

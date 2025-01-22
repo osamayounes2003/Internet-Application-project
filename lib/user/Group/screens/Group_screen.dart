@@ -1,4 +1,4 @@
-import 'package:file_manager_internet_applications_project/user/Group/multi_select_file/multi_select_item_screen.dart';
+import 'package:file_manager_internet_applications_project/core/extensions/widget_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../CustomComponent/BaseScreen.dart';
@@ -8,6 +8,7 @@ import '../../../color_.dart';
 import '../../DeleteGroup/DeleteGroup_controller.dart';
 import '../../Groups/models/Groups_Model.dart';
 import '../../RemoveOrLeaveUserFromGroup/RemoveUser_Controller.dart';
+import '../multi_select_file/multi_select_item_controller.dart';
 
 class Group_screen extends StatefulWidget {
   const Group_screen({Key? key}) : super(key: key);
@@ -105,10 +106,8 @@ class _GroupScreenState extends State<Group_screen> {
                             case 'invite_user':
                               Get.toNamed("/InviteUser", arguments: {'groupId': group!.id});
                               break;
-                            case 'file_requests':
-                              print("File Requests");
-                              break;
                             case 'File_upload_request':
+                              Get.toNamed("/PendingFile", arguments: {'groupId': group!.id});
                               print("Request File Addition");
                               break;
                             case 'remove user':
@@ -140,7 +139,7 @@ class _GroupScreenState extends State<Group_screen> {
                         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                           PopupMenuItem(value: 'add_file', child: Text("add_file".tr)),
                           PopupMenuItem(value: 'invite_user', child: Text("invite_user".tr)),
-                          PopupMenuItem(value: 'file_requests', child: Text("file_requests".tr)),
+                          PopupMenuItem(value: 'File_upload_request', child: Text("File_upload_request".tr)),
                           PopupMenuItem(value: 'remove user', child: Text("remove_user".tr)),
                           PopupMenuItem(value: 'Edit Group', child: Text("edit_group".tr)),
                           PopupMenuItem(value: 'delete Group', child: Text("delete_group".tr)),
@@ -228,55 +227,117 @@ class _GroupScreenState extends State<Group_screen> {
   }
 }
 
+// class FilesTab extends StatelessWidget {
+//   final List<File> uploadedFiles;
+//
+//   const FilesTab({Key? key, required this.uploadedFiles}) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final themeController = Get.find<ThemeController>();
+//     String currentTheme = themeController.currentTheme.value;
+//
+//     return uploadedFiles.isEmpty
+//         ? Center(
+//       child: Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           Icon(Icons.upload_file, size: 50, color: AppColors.button(context, currentTheme)),
+//           Text("No files uploaded.", style: TextStyle(color: AppColors.font(context, currentTheme))),
+//         ],
+//       ),
+//     )
+//         : Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         CustomElevatedButton(
+//           title: "Check in more than one file",
+//           onPressed: () {
+//             //TODO multi select
+//         Get.to(SelectMultiFileScreen(files: uploadedFiles));
+//           },
+//           color: AppColors.button(context, currentTheme),
+//         ),
+//         Expanded(
+//           child: ListView.builder(
+//             itemCount: uploadedFiles.length,
+//             itemBuilder: (context, index) {
+//               return Card(
+//                 margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+//                 elevation: 4,
+//                 color: AppColors.background(context, currentTheme),
+//                 child: ListTile(
+//                   leading: Icon(Icons.insert_drive_file, color: AppColors.button(context, currentTheme)),
+//                   title: Text(
+//                     uploadedFiles[index].name,
+//                     style: TextStyle(
+//                       fontWeight: FontWeight.bold,
+//                       color: AppColors.font(context, currentTheme),
+//                     ),
+//                   ),
+//                   onTap: () {
+//                     Get.toNamed(
+//                       '/File_Details',
+//                       arguments: {
+//                         'file': uploadedFiles[index],
+//                       },
+//                     );
+//                   },
+//                 ),
+//               );
+//             },
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
 class FilesTab extends StatelessWidget {
   final List<File> uploadedFiles;
+  final MultiSelectFileController controller =
+  Get.put(MultiSelectFileController());
 
-  const FilesTab({Key? key, required this.uploadedFiles}) : super(key: key);
+  FilesTab({Key? key, required this.uploadedFiles}) : super(key: key) {
+    controller.files.assignAll(uploadedFiles);
+  }
 
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
     String currentTheme = themeController.currentTheme.value;
-
-    return uploadedFiles.isEmpty
-        ? Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.upload_file, size: 50, color: AppColors.button(context, currentTheme)),
-          Text("No files uploaded.", style: TextStyle(color: AppColors.font(context, currentTheme))),
-        ],
-      ),
-    )
-        : Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CustomElevatedButton(
-          title: "Check in more than one file",
-          onPressed: () {
-            //TODO multi select
-        Get.to(SelectMultiFileScreen(files: uploadedFiles));
-          },
-          color: AppColors.button(context, currentTheme),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: uploadedFiles.length,
-            itemBuilder: (context, index) {
-              return Card(
-                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                elevation: 4,
-                color: AppColors.background(context, currentTheme),
-                child: ListTile(
-                  leading: Icon(Icons.insert_drive_file, color: AppColors.button(context, currentTheme)),
-                  title: Text(
-                    uploadedFiles[index].name,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.font(context, currentTheme),
-                    ),
+    uploadedFiles.sort((a, b) {
+      return a.status.compareTo(b.status);
+    });
+    return GetBuilder<MultiSelectFileController>(
+        builder: (controller) =>
+        uploadedFiles.isNotEmpty ?
+        Column(
+          children: [
+            Row(
+              children: [
+                ListTile(
+                  title: Text("Select All"),
+                  leading: Checkbox(
+                    value: controller.selectMultiFile.value,
+                    onChanged: (bool? value) {
+                      controller.selectAllFiles();
+                    },
                   ),
-                  onTap: () {
+                ).expanded(flex: 1),
+                CustomElevatedButton(
+                    title: "CheckIn",
+                    onPressed: () {
+                      controller.checkInMultiFile(controller.selectedIds);
+                    })
+              ],
+            ),
+            ListView.separated(
+              itemCount: uploadedFiles.length,
+              itemBuilder: (context, index) {
+                final file = uploadedFiles[index];
+                return Card(
+                  child: ListTile(
+    onTap: () {
                     Get.toNamed(
                       '/File_Details',
                       arguments: {
@@ -284,16 +345,25 @@ class FilesTab extends StatelessWidget {
                       },
                     );
                   },
-                ),
-              );
-            },
-          ),
-        ),
-      ],
+                    title:   Text(file.name),
+                    subtitle: Text('Status: ${file.status}'),
+                    leading: file.status == "AVAILABLE"
+                        ? Checkbox(
+                      value: file.isSelected,
+                      onChanged: (bool? value) {
+                        controller.toggleSelection(file.id);
+                      },
+                    )
+                        : Icon(Icons.cancel_presentation , color: Colors.red,),
+                  ),
+                );
+              }, separatorBuilder: (BuildContext context, int index) { return SizedBox(height: 5,); },
+            ).expanded(flex: 1),
+          ],
+        ): Container()
     );
   }
 }
-
 class MembersTab extends StatelessWidget {
   final List<UserInFolder> members;
   final int groupId;

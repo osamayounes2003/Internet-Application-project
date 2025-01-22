@@ -123,4 +123,30 @@ print(token);
       return [];
     }
   }
+
+  Future<List<UserInFolder>> getUsersByFolderId(int folderId) async {
+    await fetchGroups();
+    try {
+      Groups? group = currentGroupList.firstWhere((g) => g.id == folderId);
+      for (var group in currentGroupList) {
+        print("Group Name: ${group.name}, Group ID: ${group.id}");
+        for (var user in group.listOfUsers) {
+          print("  User: ${user.user.fullname}, Status: ${user.status}");
+        }
+      }
+      if (group == null) {
+        print("Group not found with id: $folderId");
+        return [];
+      }
+      print("List of Users in Folder:");
+      for (var user in group.listOfUsers) {
+        print("User: ${user.user.fullname}, Status: ${user.status}");
+      }      return group.listOfUsers.where((user) => user.status == "ACCEPTED").toList();
+    } catch (e) {
+      print("Error fetching users by folder ID: $e");
+      return [];
+    }
+  }
+
+
 }

@@ -272,6 +272,8 @@ class UserCard extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
+                controller.deleteUser(userId);
+                Get.back();
                 // controller.deleteUser(userId);
                 // Navigator.pop(context);
               },
